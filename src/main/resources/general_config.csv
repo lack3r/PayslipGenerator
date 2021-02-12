@@ -1,0 +1,8 @@
+Employee,SocialInsurance,8.3,57408
+Employer,SocialInsurance,8.3,57408
+Employee,CohesionFund,0,
+Employer,CohesionFund,2,
+Employer,RedundancyFund,1.2,57408
+Employer,IndustrialTraining,0.5,57408
+Employee,NHS,2.65,
+Employer,NHS,2.90,
