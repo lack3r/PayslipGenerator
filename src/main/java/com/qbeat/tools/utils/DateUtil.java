@@ -14,6 +14,11 @@ public class DateUtil {
         return LocalDate.parse(date, formatter);
     }
 
+    public static String localDateToDateStr(LocalDate date, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return date.format(formatter);
+    }
+
     public static boolean isInCurrentMonth(LocalDate date) {
         LocalDate dateNow = now();
 

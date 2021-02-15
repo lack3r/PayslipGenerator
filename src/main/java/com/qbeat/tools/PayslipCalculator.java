@@ -5,6 +5,7 @@ import com.qbeat.tools.config.PersonType;
 import com.qbeat.tools.models.CompanyInfo;
 import com.qbeat.tools.models.DeductionsInfo;
 import com.qbeat.tools.models.Employee;
+import com.qbeat.tools.models.Payslip;
 
 import java.util.ArrayList;
 import java.util.List;
