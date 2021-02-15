@@ -1,6 +1,10 @@
 package com.qbeat.tools.models;
 
+import com.qbeat.tools.config.CSVReader;
+import com.qbeat.tools.utils.DateUtil;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class Employee {
     private final String id;
@@ -15,6 +19,18 @@ public class Employee {
         this.fullName = fullName;
         this.grossSalary = grossSalary;
         this.dateStarted = dateStarted;
+    }
+
+    public static Employee fromCSVLine(String line) {
+        final List<String> parts = CSVReader.splitLine(line);
+
+        return new Employee(
+                parts.get(0),
+                parts.get(1),
+                parts.get(2),
+                Double.parseDouble(parts.get(3)),
+                DateUtil.dateStrToLocalDate(parts.get(4), "dd/MM/yyyy")
+        );
     }
 
     public String getId() {

@@ -1,9 +1,11 @@
 package com.qbeat.tools.models;
 
-import com.qbeat.tools.models.Employee;
+import com.qbeat.tools.config.CSVReader;
+import com.qbeat.tools.config.FileReader;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompanyInfo {
     private final String name;
@@ -16,6 +18,24 @@ public class CompanyInfo {
         this.address = address;
         this.phone = phone;
         this.employees = employees;
+    }
+
+    public static CompanyInfo loadFromCSVFile(FileReader fileReader, String filename) {
+        List<String> fileLines = fileReader.read(filename);
+        List<String> companyInfo = CSVReader.splitLine(fileLines.remove(0));
+
+        List<Employee> companyEmployees = fileLines.stream()
+                .map(String::trim)
+                .filter(line -> !line.equals(""))
+                .map(Employee::fromCSVLine)
+                .collect(Collectors.toList());
+
+        return new CompanyInfo(
+                companyInfo.get(0),
+                companyInfo.get(1),
+                companyInfo.get(2),
+                companyEmployees
+        );
     }
 
     public String getName() {
