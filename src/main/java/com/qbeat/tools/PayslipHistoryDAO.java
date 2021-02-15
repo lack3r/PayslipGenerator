@@ -111,6 +111,7 @@ public class PayslipHistoryDAO {
     public void insertOnDuplicateUpdate(Payslip payslip) {
         List<PayslipHistory> employeeCurrentMonthEntries = findByEmployeeIdAndInCurrentMonth(payslip.getEmployee().getId());
 
+        //TODO WHAT ABOUT DECEMBER AND 13TH SALARY?
         if (!employeeCurrentMonthEntries.isEmpty()) {
             update(employeeCurrentMonthEntries, payslip);
             return;
