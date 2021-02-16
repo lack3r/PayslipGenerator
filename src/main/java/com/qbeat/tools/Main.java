@@ -16,6 +16,7 @@ public class Main {
     private static final String TAX_CONFIG_FILENAME = "tax_config.csv";
     private static final String COMPANY_INFO_FILENAME = "company_info.csv";
     private static final String PAYSLIP_HISTORY_FILENAME = "payslip_history.csv";
+    private static final String HTML_TEMPLATE_FILENAME = "payslip_template.html";
 
     public static void main(String[] args) {
         FileReader fileReader = CSVReader.getInstance();
@@ -31,14 +32,17 @@ public class Main {
         PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, appConfig, payslipHistoryDAO);
         List<Payslip> newPayslips = payslipCalculator.calculate();
 
-        // TODO GENERATE PDFs
-        boolean pdfsGeneratedSuccessfully = true;
-        if (!pdfsGeneratedSuccessfully) {
-            System.out.println("Failed to generate the PDF(s) of payslip(s)");
+        HtmlGenerator htmlGenerator = new HtmlGenerator(HTML_TEMPLATE_FILENAME, newPayslips);
+        boolean htmlsGeneratedSuccessfully = htmlGenerator.generate();
+
+        // Prevent from saving payslips in payslip history
+        // if payslips failed to generate successfully
+        if (!htmlsGeneratedSuccessfully) {
+            System.out.println("Failed to generate the HTML(s) of payslip(s)");
             System.exit(1);
         }
 
-        System.out.println("PDF(s) of payslip(s) successfully generated");
+        System.out.println("HTML(s) of payslip(s) successfully generated");
         payslipHistoryDAO.insertOnDuplicateUpdate(newPayslips);
     }
 }

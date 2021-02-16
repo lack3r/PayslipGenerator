@@ -24,6 +24,9 @@ public class PayslipCalculator {
         this.payslipHistoryDAO = payslipHistoryDAO;
     }
 
+    /**
+     * @return A list of Payslip objects
+     */
     public List<Payslip> calculate() {
         List<Payslip> payslips = new ArrayList<>();
         try {
@@ -44,6 +47,10 @@ public class PayslipCalculator {
         return payslips;
     }
 
+    /**
+     * @param employee The employee to calculate its payslip data
+     * @return A Payslip object for the given employee
+     */
     private Payslip calculateEmployeePayslip(Employee employee) {
         final TaxCalculator taxCalculator = new TaxCalculator(employee.getGrossSalary(), appConfig.getTaxProperties(),
                 MONTHS_TO_CONSIDER);

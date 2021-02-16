@@ -21,6 +21,10 @@ public class Employee {
         this.dateStarted = dateStarted;
     }
 
+    /**
+     * @param line A csv line
+     * @return An Employee object
+     */
     public static Employee fromCSVLine(String line) {
         final List<String> parts = CSVReader.splitLine(line);
 

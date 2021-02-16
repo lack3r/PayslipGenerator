@@ -1,11 +1,10 @@
 package com.qbeat.tools;
 
-import com.qbeat.tools.models.DeductionsInfo;
-import com.qbeat.tools.models.GeneralConfigProperty;
-import com.qbeat.tools.models.Employee;
 import com.qbeat.tools.config.PersonType;
+import com.qbeat.tools.models.DeductionsInfo;
+import com.qbeat.tools.models.Employee;
+import com.qbeat.tools.models.GeneralConfigProperty;
 import com.qbeat.tools.models.PayslipHistory;
-import com.qbeat.tools.utils.DateUtil;
 import com.qbeat.tools.utils.DecimalUtil;
 
 import java.util.List;
@@ -33,10 +32,13 @@ public class DeductionsCalculator {
         this.monthsToConsider = monthsToConsider;
     }
 
+    /**
+     * @return The DeductionsInfo based on the person type
+     */
     public DeductionsInfo calculate() {
         payslipHistories = payslipHistoryDAO.findByEmployeeIdAndPersonType(employee.getId(), personType);
 
-        switch(personType) {
+        switch (personType) {
             case EMPLOYEE:
                 calculateForEmployee();
                 break;
@@ -50,6 +52,9 @@ public class DeductionsCalculator {
         return deductionsInfo;
     }
 
+    /**
+     * Calculates the DeductionsInfo of the employee
+     */
     private void calculateForEmployee() {
         calculateForAnyone();
 
@@ -58,12 +63,18 @@ public class DeductionsCalculator {
         calculateTaxDeductions();
     }
 
+    /**
+     * Calculates the DeductionsInfo of the employer
+     */
     private void calculateForEmployer() {
         calculateForAnyone();
         calculateRedundancyFund();
         calculateIndustrialTraining();
     }
 
+    /**
+     * Common DeductionsInfo calculations
+     */
     private void calculateForAnyone() {
         calculateSocialInsurance();
         calculateCohesionFund();
