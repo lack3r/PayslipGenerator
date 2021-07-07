@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 public class CSVWriter implements io.qbeat.config.FileWriter {
@@ -14,10 +13,9 @@ public class CSVWriter implements io.qbeat.config.FileWriter {
      * @param filename The name of csv file to write on
      * @param line     The line to write
      * @param append   Flag to determine whether to append the line to file or override the file
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException If an I/O error occurs
      */
-    public void write(String filename, String line, boolean append) throws IOException, URISyntaxException {
+    public void write(String filename, String line, boolean append) throws IOException {
         FileWriter fileWriter = getFileWriter(filename, append);
 
         writeToFile(fileWriter, line);
@@ -27,10 +25,9 @@ public class CSVWriter implements io.qbeat.config.FileWriter {
      * @param filename The name of csv file to write on
      * @param lines    The lines to write
      * @param append   Flag to determine whether to append the lines to file or override the file
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException If an I/O error occurs
      */
-    public void write(String filename, List<String> lines, boolean append) throws IOException, URISyntaxException {
+    public void write(String filename, List<String> lines, boolean append) throws IOException {
 
         for (int i = 0; i < lines.size(); i++) {
             // When append is false (i.e override current file)
@@ -48,10 +45,9 @@ public class CSVWriter implements io.qbeat.config.FileWriter {
      * @param filename The name of csv file
      * @param append   Flag to determine whether to append or override the file
      * @return A FileWriter object
-     * @throws URISyntaxException
-     * @throws IOException
+     * @throws IOException If an I/O error occurs
      */
-    private FileWriter getFileWriter(String filename, boolean append) throws URISyntaxException, IOException {
+    private FileWriter getFileWriter(String filename, boolean append) throws IOException {
         String filepath = System.getProperty("user.dir") + File.separator + FILES_FOLDER + File.separator + filename;
 
         File file = new File(filepath);
@@ -67,7 +63,7 @@ public class CSVWriter implements io.qbeat.config.FileWriter {
      *
      * @param fileWriter A FileWriter object
      * @param line       The line to write in file
-     * @throws IOException
+     * @throws IOException If an I/O error occurs
      */
     private void writeToFile(FileWriter fileWriter, String line) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);

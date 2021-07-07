@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +55,7 @@ public class CSVReader implements FileReader {
         java.io.FileReader fileReader;
         try {
             fileReader = getFileReader(filename);
-        } catch (FileNotFoundException | URISyntaxException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -67,10 +66,10 @@ public class CSVReader implements FileReader {
     /**
      * @param filename The filename to create the file reader
      * @return A FileReader object
-     * @throws URISyntaxException
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if the named file does not exist, is a directory rather than a regular file,
+     * or for some other reason cannot be opened for reading.
      */
-    private java.io.FileReader getFileReader(String filename) throws URISyntaxException, FileNotFoundException {
+    private java.io.FileReader getFileReader(String filename) throws FileNotFoundException {
         String filepath = System.getProperty("user.dir") + File.separator + FILES_FOLDER + File.separator + filename;
 
         File file = new File(filepath);
