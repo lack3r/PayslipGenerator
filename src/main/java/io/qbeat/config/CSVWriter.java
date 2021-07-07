@@ -1,4 +1,4 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class CSVWriter implements com.qbeat.tools.config.FileWriter {
+public class CSVWriter implements io.qbeat.config.FileWriter {
     private static final String FILES_FOLDER = "files";
 
     /**

@@ -1,7 +1,7 @@
-package com.qbeat.tools.models;
+package io.qbeat.models;
 
-import com.qbeat.tools.config.CSVReader;
-import com.qbeat.tools.config.FileReader;
+import io.qbeat.config.CSVReader;
+import io.qbeat.config.FileReader;
 
 import java.util.Collections;
 import java.util.List;

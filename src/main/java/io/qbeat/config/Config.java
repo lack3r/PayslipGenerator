@@ -1,4 +1,4 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
 public abstract class Config {
     protected final FileReader fileReader;

@@ -1,4 +1,4 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,11 +1,11 @@
-package com.qbeat.tools;
+package io.qbeat;
 
-import com.qbeat.tools.config.FileReader;
-import com.qbeat.tools.config.FileWriter;
-import com.qbeat.tools.config.PersonType;
-import com.qbeat.tools.models.Payslip;
-import com.qbeat.tools.models.PayslipHistory;
-import com.qbeat.tools.utils.DateUtil;
+import io.qbeat.config.FileReader;
+import io.qbeat.config.FileWriter;
+import io.qbeat.config.PersonType;
+import io.qbeat.models.Payslip;
+import io.qbeat.models.PayslipHistory;
+import io.qbeat.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
-import com.qbeat.tools.models.GeneralConfigProperty;
-import com.qbeat.tools.models.TaxConfigProperty;
+import io.qbeat.models.GeneralConfigProperty;
+import io.qbeat.models.TaxConfigProperty;
 
 import java.util.List;
 import java.util.Map;

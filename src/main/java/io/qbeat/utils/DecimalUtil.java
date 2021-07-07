@@ -1,4 +1,4 @@
-package com.qbeat.tools.utils;
+package io.qbeat.utils;
 
 public class DecimalUtil {
     public static double round(double value) {

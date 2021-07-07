@@ -1,13 +1,13 @@
-package com.qbeat.tools;
+package io.qbeat;
 
-import com.qbeat.tools.config.AppConfig;
-import com.qbeat.tools.config.CSVReader;
-import com.qbeat.tools.config.CSVWriter;
-import com.qbeat.tools.config.FileReader;
-import com.qbeat.tools.config.GeneralConfig;
-import com.qbeat.tools.config.TaxConfig;
-import com.qbeat.tools.models.CompanyInfo;
-import com.qbeat.tools.models.Payslip;
+import io.qbeat.config.AppConfig;
+import io.qbeat.config.CSVReader;
+import io.qbeat.config.CSVWriter;
+import io.qbeat.config.FileReader;
+import io.qbeat.config.GeneralConfig;
+import io.qbeat.config.TaxConfig;
+import io.qbeat.models.CompanyInfo;
+import io.qbeat.models.Payslip;
 
 import java.util.List;
 

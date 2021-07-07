@@ -1,8 +1,8 @@
-package com.qbeat.tools.models;
+package io.qbeat.models;
 
-import com.qbeat.tools.config.CSVReader;
-import com.qbeat.tools.config.PersonType;
-import com.qbeat.tools.utils.DateUtil;
+import io.qbeat.config.CSVReader;
+import io.qbeat.config.PersonType;
+import io.qbeat.utils.DateUtil;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

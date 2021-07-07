@@ -1,4 +1,4 @@
-package com.qbeat.tools.models;
+package io.qbeat.models;
 
 public class TaxConfigProperty {
     private final int rangeStartPrice;

@@ -1,6 +1,6 @@
-package com.qbeat.tools.models;
+package io.qbeat.models;
 
-import com.qbeat.tools.utils.DecimalUtil;
+import io.qbeat.utils.DecimalUtil;
 
 public class DeductionsInfo {
     private double socialInsuranceForMonth;

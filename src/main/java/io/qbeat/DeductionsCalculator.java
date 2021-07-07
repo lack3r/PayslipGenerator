@@ -1,11 +1,11 @@
-package com.qbeat.tools;
+package io.qbeat;
 
-import com.qbeat.tools.config.PersonType;
-import com.qbeat.tools.models.DeductionsInfo;
-import com.qbeat.tools.models.Employee;
-import com.qbeat.tools.models.GeneralConfigProperty;
-import com.qbeat.tools.models.PayslipHistory;
-import com.qbeat.tools.utils.DecimalUtil;
+import io.qbeat.config.PersonType;
+import io.qbeat.models.DeductionsInfo;
+import io.qbeat.models.Employee;
+import io.qbeat.models.GeneralConfigProperty;
+import io.qbeat.models.PayslipHistory;
+import io.qbeat.utils.DecimalUtil;
 
 import java.util.List;
 import java.util.Map;

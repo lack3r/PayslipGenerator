@@ -1,6 +1,6 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
-import com.qbeat.tools.models.GeneralConfigProperty;
+import io.qbeat.models.GeneralConfigProperty;
 
 import java.util.Collections;
 import java.util.HashMap;

@@ -1,6 +1,6 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
-import com.qbeat.tools.models.TaxConfigProperty;
+import io.qbeat.models.TaxConfigProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;

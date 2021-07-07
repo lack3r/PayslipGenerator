@@ -1,4 +1,4 @@
-package com.qbeat.tools.utils;
+package io.qbeat.utils;
 
 import java.time.LocalDate;
 import java.time.Period;

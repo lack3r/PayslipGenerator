@@ -1,11 +1,11 @@
-package com.qbeat.tools;
+package io.qbeat;
 
-import com.qbeat.tools.config.AppConfig;
-import com.qbeat.tools.config.PersonType;
-import com.qbeat.tools.models.CompanyInfo;
-import com.qbeat.tools.models.DeductionsInfo;
-import com.qbeat.tools.models.Employee;
-import com.qbeat.tools.models.Payslip;
+import io.qbeat.config.AppConfig;
+import io.qbeat.config.PersonType;
+import io.qbeat.models.CompanyInfo;
+import io.qbeat.models.DeductionsInfo;
+import io.qbeat.models.Employee;
+import io.qbeat.models.Payslip;
 
 import java.util.ArrayList;
 import java.util.List;

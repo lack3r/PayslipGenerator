@@ -1,7 +1,7 @@
-package com.qbeat.tools;
+package io.qbeat;
 
-import com.qbeat.tools.models.TaxConfigProperty;
-import com.qbeat.tools.utils.DecimalUtil;
+import io.qbeat.models.TaxConfigProperty;
+import io.qbeat.utils.DecimalUtil;
 
 import java.util.List;
 

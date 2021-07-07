@@ -1,4 +1,4 @@
-package com.qbeat.tools.config;
+package io.qbeat.config;
 
 import java.util.List;
 
