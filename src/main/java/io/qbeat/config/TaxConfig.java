@@ -8,14 +8,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TaxConfig extends Config {
+public class TaxConfig{
     private final List<TaxConfigProperty> taxProperties = new ArrayList<>();
+    private final FileReader fileReader;
+    private final String filename;
+    private boolean isLoaded;
 
     public TaxConfig(FileReader fileReader, String filename) {
-        super(fileReader, filename);
+        this.fileReader = fileReader;
+        this.filename = filename;
     }
 
-    @Override
     public void load() {
         if (isLoaded) {
             return;

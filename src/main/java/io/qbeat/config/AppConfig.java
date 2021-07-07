@@ -15,7 +15,14 @@ public class AppConfig {
     @Getter private String htmlTemplateFilename="";
     @Getter private String payslipsOutputDirectory="";
 
+    private boolean isLoaded = false;
+
     public void load() throws IOException {
+
+        if (isLoaded) {
+            return;
+        }
+
         String rootPath = "";
 
         try {
@@ -29,6 +36,9 @@ public class AppConfig {
         } catch (IOException e){
             throw new IOException("Could not read Configuration File: " + rootPath, e);
         }
+
+        isLoaded = true;
+        System.out.println(getClass().getSimpleName() + " successfully loaded");
     }
 
     private void readProperties(Properties appProps) {

@@ -9,17 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GeneralConfig extends Config {
+public class GeneralConfig {
     private static final String EMPTY_STRING = "";
 
     private final Map<String, GeneralConfigProperty> employeeProperties = new HashMap<>();
     private final Map<String, GeneralConfigProperty> employerProperties = new HashMap<>();
+    private final FileReader fileReader;
+    private final String filename;
+    private boolean isLoaded;
 
     public GeneralConfig(FileReader fileReader, String filename) {
-        super(fileReader, filename);
+        this.fileReader = fileReader; 
+        this.filename = filename;
     }
 
-    @Override
     public void load() {
         if (isLoaded) {
             return;
