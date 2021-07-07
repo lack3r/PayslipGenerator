@@ -6,6 +6,8 @@ import io.qbeat.models.PersonType;
 import io.qbeat.models.Payslip;
 import io.qbeat.models.PayslipHistory;
 import io.qbeat.utils.DateUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ public class PayslipHistoryDAO {
     private final FileReader fileReader;
     private final FileWriter fileWriter;
     private final String filename;
+
+    private static final Logger logger = LogManager.getLogger(PayslipHistoryDAO.class);
 
     public PayslipHistoryDAO(FileReader fileReader, FileWriter fileWriter, String filename) {
         this.fileReader = fileReader;
@@ -74,11 +78,10 @@ public class PayslipHistoryDAO {
 
         try {
             fileWriter.write(filename, entriesToInsert, true);
-            System.out.println("Payslip successfully inserted: " + payslip);
+            logger.debug("Payslip successfully inserted: " + payslip);
         }
         catch (Exception e) {
-            System.out.println("Failed to insert payslip: " + payslip);
-            e.printStackTrace();
+            logger.error("Failed to insert payslip: " + payslip, e);
         }
     }
 
@@ -96,11 +99,10 @@ public class PayslipHistoryDAO {
 
         try {
             fileWriter.write(filename, entriesToInsert, false);
-            System.out.println("Payslip successfully updated: " + newPayslip);
+            logger.info("Payslip successfully updated: " + newPayslip);
         }
         catch (Exception e) {
-            System.out.println("Failed to update old payslip entries: " + oldPayslipEntries + "\n with new payslip: " + newPayslip);
-            e.printStackTrace();
+            logger.error("Failed to update old payslip entries: " + oldPayslipEntries + "\n with new payslip: " + newPayslip, e);
         }
     }
 

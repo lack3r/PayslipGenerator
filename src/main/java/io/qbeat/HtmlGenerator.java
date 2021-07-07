@@ -6,6 +6,8 @@ import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
 import io.qbeat.utils.DateUtil;
 import io.qbeat.utils.DecimalUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class HtmlGenerator {
+
+    private static final Logger logger = LogManager.getLogger(HtmlGenerator.class);
+
     private static final String NA = "N/A";
 
     private final String templateFilename;
@@ -147,7 +152,7 @@ public class HtmlGenerator {
         String outputDirPath = System.getProperty("user.dir") + File.separator + outputDirectory;
         File outputDir = new File(outputDirPath);
         if (!outputDir.exists()) {
-            System.out.println("Creating directory: " + outputDirPath);
+            logger.info("Creating directory: " + outputDirPath);
             boolean wasDirectoryWithParentsCreated = outputDir.mkdirs();
 
             if (!wasDirectoryWithParentsCreated){

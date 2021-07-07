@@ -1,12 +1,16 @@
 package io.qbeat.config;
 
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class AppConfig {
+
+    private static final Logger logger = LogManager.getLogger(AppConfig.class);
 
     @Getter private String generalConfigFilename="";
     @Getter private String taxConfigFilename="";
@@ -38,7 +42,7 @@ public class AppConfig {
         }
 
         isLoaded = true;
-        System.out.println(getClass().getSimpleName() + " successfully loaded");
+        logger.info(getClass().getSimpleName() + " successfully loaded");
     }
 
     private void readProperties(Properties appProps) {

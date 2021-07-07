@@ -6,11 +6,16 @@ import io.qbeat.models.Employee;
 import io.qbeat.models.GeneralConfigProperty;
 import io.qbeat.models.PayslipHistory;
 import io.qbeat.utils.DecimalUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 
 public class DeductionsCalculator {
+
+    private static final Logger logger = LogManager.getLogger(DeductionsCalculator.class);
+
     private final PersonType personType;
     private final Employee employee;
     private final TaxCalculator taxCalculator;
@@ -46,7 +51,7 @@ public class DeductionsCalculator {
                 calculateForEmployer();
                 break;
             default:
-                System.out.println("Unable to calculate deductions. Unknown person type: " + personType);
+                logger.error("Unable to calculate deductions. Unknown person type: " + personType);
         }
 
         return deductionsInfo;

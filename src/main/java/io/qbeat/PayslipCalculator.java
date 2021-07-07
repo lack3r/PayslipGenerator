@@ -7,11 +7,15 @@ import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PayslipCalculator {
+    private static final Logger logger = LogManager.getLogger(PayslipCalculator.class);
+
     // TODO Hard-coded months
     private static final int MONTHS_TO_CONSIDER = 13;
 
@@ -33,17 +37,16 @@ public class PayslipCalculator {
     public List<Payslip> calculate() {
         List<Payslip> payslips = new ArrayList<>();
         try {
-            System.out.println("Total of " + companyInfo.getEmployees().size() + " payslip(s) info to be calculated");
+            logger.debug("Total of " + companyInfo.getEmployees().size() + " payslip(s) info to be calculated");
             for (Employee employee : companyInfo.getEmployees()) {
                 Payslip employeePayslip = calculateEmployeePayslip(employee);
 
-                System.out.println("Payslip info of employee with Id " + employee.getId() + " successfully calculated");
+                logger.info("Payslip info of employee with Id " + employee.getId() + " was successfully calculated");
                 payslips.add(employeePayslip);
             }
         }
         catch (Exception e) {
-            System.out.println("Failed to generate payslip info of employees. Process aborted");
-            e.printStackTrace();
+            logger.error("Failed to generate payslip info of employees. Process aborted", e);
             throw e;
         }
 

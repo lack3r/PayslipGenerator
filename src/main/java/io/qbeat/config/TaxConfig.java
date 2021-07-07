@@ -3,12 +3,16 @@ package io.qbeat.config;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.readers.FileReader;
 import io.qbeat.models.TaxConfigProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TaxConfig{
+    private static final Logger logger = LogManager.getLogger(TaxConfig.class);
+
     private final List<TaxConfigProperty> taxProperties = new ArrayList<>();
     private final FileReader fileReader;
     private final String filename;
@@ -32,7 +36,7 @@ public class TaxConfig{
         }
 
         isLoaded = true;
-        System.out.println(getClass().getSimpleName() + " successfully loaded");
+        logger.info(getClass().getSimpleName() + " successfully loaded");
     }
 
     public List<TaxConfigProperty> getProperties() {

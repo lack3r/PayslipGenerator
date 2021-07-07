@@ -10,11 +10,18 @@ import io.qbeat.models.Payslip;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Main {
+
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
 
         try {
+            logger.info("Payslip Generator Starting");
+
             Config config = loadConfigurationFiles();
 
             FileReader csvReader = CSVReader.getInstance();
@@ -27,10 +34,9 @@ public class Main {
 
             payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
         } catch (Exception e) {
-            System.out.println("Failed to calculate and generate invoices \n Terminating");
-            e.printStackTrace();
-            System.exit(1);
+            logger.error("Failed to calculate and generate invoices \n Terminating", e);
         }
+        logger.info("Payslip Generator Finished");
     }
 
     private static Config loadConfigurationFiles() throws Exception {
@@ -48,7 +54,7 @@ public class Main {
         try {
             HtmlGenerator htmlGenerator = new HtmlGenerator(config.getHtmlTemplateFilename(), payslipsToBeGenerated, config.getPayslipsOutputDirectory());
             htmlGenerator.generate();
-            System.out.println("HTML(s) of payslip(s) successfully generated");
+            logger.info("HTML(s) of payslip(s) successfully generated");
         } catch (IOException e) {
             throw new IOException("ERROR: Failed to generate the payslip(s) in HTML format ", e);
         }

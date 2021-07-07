@@ -4,6 +4,8 @@ import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.readers.FileReader;
 import io.qbeat.models.GeneralConfigProperty;
 import io.qbeat.models.PersonType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneralConfig {
+    private static final Logger logger = LogManager.getLogger(GeneralConfig.class);
+
     private static final String EMPTY_STRING = "";
 
     private final Map<String, GeneralConfigProperty> employeeProperties = new HashMap<>();
@@ -37,7 +41,7 @@ public class GeneralConfig {
         }
 
         isLoaded = true;
-        System.out.println(getClass().getSimpleName() + " successfully loaded");
+        logger.info(getClass().getSimpleName() + " successfully loaded");
     }
 
     public Map<String, GeneralConfigProperty> getProperties(PersonType personType) {
