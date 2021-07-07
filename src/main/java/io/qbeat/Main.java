@@ -9,40 +9,52 @@ import io.qbeat.config.TaxConfig;
 import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.Payslip;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
-    private static final String GENERAL_CONFIG_FILENAME = "general_config.csv";
-    private static final String TAX_CONFIG_FILENAME = "tax_config.csv";
-    private static final String COMPANY_INFO_FILENAME = "company_info.csv";
-    private static final String PAYSLIP_HISTORY_FILENAME = "payslip_history.csv";
-    private static final String HTML_TEMPLATE_FILENAME = "payslip_template.html";
 
     public static void main(String[] args) {
-        FileReader fileReader = CSVReader.getInstance();
-        GeneralConfig generalConfig = new GeneralConfig(fileReader, GENERAL_CONFIG_FILENAME);
-        TaxConfig taxConfig = new TaxConfig(fileReader, TAX_CONFIG_FILENAME);
+        AppConfig appConfig = new AppConfig();
+        GeneralConfig generalConfig = null;
+        TaxConfig taxConfig = null;
+        FileReader fileReader = null;
+        try {
+            appConfig.load();
 
-        AppConfig appConfig = new AppConfig(generalConfig, taxConfig);
-        appConfig.load();
+            fileReader = CSVReader.getInstance();
 
-        CompanyInfo companyInfo = CompanyInfo.loadFromCSVFile(fileReader, COMPANY_INFO_FILENAME);
-        final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(fileReader, new CSVWriter(), PAYSLIP_HISTORY_FILENAME);
+            generalConfig = new GeneralConfig(fileReader, appConfig.getGeneralConfigFilename());
+            generalConfig.load();
 
-        PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, appConfig, payslipHistoryDAO);
-        List<Payslip> newPayslips = payslipCalculator.calculate();
+            taxConfig = new TaxConfig(fileReader, appConfig.getTaxConfigFilename());
+            taxConfig.load();
+        } catch (IOException e) {
+            System.out.println("Failed to load configuration files \n Terminating");
+            e.printStackTrace();
+            System.exit(1);
+        }
 
-        HtmlGenerator htmlGenerator = new HtmlGenerator(HTML_TEMPLATE_FILENAME, newPayslips);
+        CompanyInfo companyInfo = CompanyInfo.loadFromCSVFile(fileReader, appConfig.getCompanyInfoFilename());
+
+        final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(fileReader, new CSVWriter(), appConfig.getPayslipHistoryFilename());
+
+        PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, taxConfig, generalConfig, payslipHistoryDAO);
+        List<Payslip> payslipsToBeGenerated = payslipCalculator.calculate();
+
+        HtmlGenerator htmlGenerator = new HtmlGenerator(appConfig.getHtmlTemplateFilename(), payslipsToBeGenerated, appConfig.getPayslipsOutputDirectory());
         boolean payslipsGeneratedSuccessfully = htmlGenerator.generate();
 
         // Prevent from saving payslips in payslip history
         // if payslips failed to generate successfully
         if (!payslipsGeneratedSuccessfully) {
-            System.out.println("Failed to generate the HTML(s) of payslip(s)");
+            System.out.println("Failed to generate the payslip(s) in HTML format");
             System.exit(1);
         }
 
         System.out.println("HTML(s) of payslip(s) successfully generated");
-        payslipHistoryDAO.insertOnDuplicateUpdate(newPayslips);
+
+        payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
     }
 }

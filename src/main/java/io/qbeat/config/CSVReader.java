@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class CSVReader implements FileReader {
     private static final String DELIMITER = ",";
-    private static final String FILES_FOLDER = "files";
     private static volatile CSVReader instance;
 
     /**
@@ -70,7 +69,8 @@ public class CSVReader implements FileReader {
      * or for some other reason cannot be opened for reading.
      */
     private java.io.FileReader getFileReader(String filename) throws FileNotFoundException {
-        String filepath = System.getProperty("user.dir") + File.separator + FILES_FOLDER + File.separator + filename;
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String filepath = rootPath + File.separator + filename;
 
         File file = new File(filepath);
         if (!file.exists() || !file.isFile()) {

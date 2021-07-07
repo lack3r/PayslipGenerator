@@ -13,21 +13,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class HtmlGenerator {
-    private static final String FILES_FOLDER = "files";
-    private static final String OUTPUT_FOLDER = "outputPayslips";
     private static final String NA = "N/A";
 
     private final String templateFilename;
     private final List<Payslip> payslips;
+    private final String outputDirectory;
 
-    public HtmlGenerator(String templateFilename, List<Payslip> payslips) {
+    public HtmlGenerator(String templateFilename, List<Payslip> payslips, String outputDirectory) {
         this.templateFilename = templateFilename;
         this.payslips = payslips;
+        this.outputDirectory = outputDirectory;
     }
 
     /**
@@ -37,7 +38,11 @@ public class HtmlGenerator {
         for (Payslip payslip : payslips) {
             try {
                 generatePayslip(payslip);
+            } catch (NoSuchFileException e){
+                System.out.println("ERROR: File " + e.getMessage() + " does not exist");
+                return false;
             } catch (IOException e) {
+                System.out.println("ERROR: Could not generate payslips");
                 e.printStackTrace();
                 return false;
             }
@@ -48,13 +53,11 @@ public class HtmlGenerator {
 
     /**
      * @param payslip A Payslip object
-     * @throws IOException If an I/O error occurs
      */
     private void generatePayslip(Payslip payslip) throws IOException {
-        String template = addInfo(loadTemplateFile(), payslip);
-        String payslipName = getPayslipFilename(payslip.getEmployee().getId());
-
-        createNewPayslip(template, payslipName);
+            String template = addInfo(loadTemplateFile(), payslip);
+            String payslipName = getPayslipFilename(payslip.getEmployee().getId());
+            createNewPayslip(template, payslipName);
     }
 
     /**
@@ -152,14 +155,14 @@ public class HtmlGenerator {
      * @throws IOException If an I/O error occurs
      */
     private void createNewPayslip(String content, String filename) throws IOException {
-        String outputDirPath = System.getProperty("user.dir") + File.separator + OUTPUT_FOLDER;
+        String outputDirPath = System.getProperty("user.dir") + File.separator + outputDirectory;
         File outputDir = new File(outputDirPath);
         if (!outputDir.exists()) {
             System.out.println("Creating directory: " + outputDirPath);
-            boolean wasDirectoryCreated = outputDir.mkdir();
+            boolean wasDirectoryWithParentsCreated = outputDir.mkdirs();
 
-            if (!wasDirectoryCreated){
-                throw new IOException("Directory" + outputDirPath + "could not be created");
+            if (!wasDirectoryWithParentsCreated){
+                throw new IOException("Directory " + outputDirPath + " could not be created");
             }
         }
 
@@ -173,14 +176,13 @@ public class HtmlGenerator {
     /**
      * @return An html template without payslip info
      */
-    private String loadTemplateFile() {
-        String filepath = System.getProperty("user.dir") + File.separator + FILES_FOLDER + File.separator + templateFilename;
+    private String loadTemplateFile() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String filepath = rootPath + File.separator + templateFilename;
 
         StringBuilder contentBuilder = new StringBuilder();
         try (Stream<String> stream = Files.lines(Paths.get(filepath), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return contentBuilder.toString();

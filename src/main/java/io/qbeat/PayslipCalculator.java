@@ -1,7 +1,9 @@
 package io.qbeat;
 
 import io.qbeat.config.AppConfig;
+import io.qbeat.config.GeneralConfig;
 import io.qbeat.config.PersonType;
+import io.qbeat.config.TaxConfig;
 import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
@@ -15,12 +17,14 @@ public class PayslipCalculator {
     private static final int MONTHS_TO_CONSIDER = 13;
 
     private final CompanyInfo companyInfo;
-    private final AppConfig appConfig;
+    private final TaxConfig taxConfig;
     private final PayslipHistoryDAO payslipHistoryDAO;
+    private final GeneralConfig generalConfig;
 
-    public PayslipCalculator(CompanyInfo companyInfo, AppConfig appConfig, PayslipHistoryDAO payslipHistoryDAO) {
+    public PayslipCalculator(CompanyInfo companyInfo, TaxConfig taxConfig, GeneralConfig generalConfig, PayslipHistoryDAO payslipHistoryDAO) {
         this.companyInfo = companyInfo;
-        this.appConfig = appConfig;
+        this.taxConfig = taxConfig;
+        this.generalConfig = generalConfig;
         this.payslipHistoryDAO = payslipHistoryDAO;
     }
 
@@ -52,13 +56,13 @@ public class PayslipCalculator {
      * @return A Payslip object for the given employee
      */
     private Payslip calculateEmployeePayslip(Employee employee) {
-        final TaxCalculator taxCalculator = new TaxCalculator(employee.getGrossSalary(), appConfig.getTaxProperties(),
+        final TaxCalculator taxCalculator = new TaxCalculator(employee.getGrossSalary(), taxConfig.getProperties(),
                 MONTHS_TO_CONSIDER);
 
         DeductionsCalculator employeeDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYEE, employee,
-                taxCalculator, appConfig.getGeneralProperties(PersonType.EMPLOYEE), payslipHistoryDAO, MONTHS_TO_CONSIDER);
+                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYEE), payslipHistoryDAO, MONTHS_TO_CONSIDER);
         DeductionsCalculator employerDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYER, employee,
-                taxCalculator, appConfig.getGeneralProperties(PersonType.EMPLOYER), payslipHistoryDAO, MONTHS_TO_CONSIDER);
+                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYER), payslipHistoryDAO, MONTHS_TO_CONSIDER);
 
         DeductionsInfo employeeDeductionsInfo = employeeDeductionsCalculator.calculate();
         DeductionsInfo employerDeductionsInfo = employerDeductionsCalculator.calculate();

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class CSVWriter implements io.qbeat.config.FileWriter {
-    private static final String FILES_FOLDER = "files";
 
     /**
      * @param filename The name of csv file to write on
@@ -48,7 +47,9 @@ public class CSVWriter implements io.qbeat.config.FileWriter {
      * @throws IOException If an I/O error occurs
      */
     private FileWriter getFileWriter(String filename, boolean append) throws IOException {
-        String filepath = System.getProperty("user.dir") + File.separator + FILES_FOLDER + File.separator + filename;
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String filepath = rootPath + File.separator + filename;
+
 
         File file = new File(filepath);
         if (!file.exists() || !file.isFile()) {

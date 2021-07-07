@@ -1,37 +1,47 @@
 package io.qbeat.config;
 
-import io.qbeat.models.GeneralConfigProperty;
-import io.qbeat.models.TaxConfigProperty;
+import lombok.Getter;
 
-import java.util.List;
-import java.util.Map;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class AppConfig {
-    private final GeneralConfig generalConfig;
-    private final TaxConfig taxConfig;
 
-    public AppConfig(GeneralConfig generalConfig, TaxConfig taxConfig) {
-        this.generalConfig = generalConfig;
-        this.taxConfig = taxConfig;
-    }
+    @Getter private String generalConfigFilename="";
+    @Getter private String taxConfigFilename="";
+    @Getter private String companyInfoFilename="";
+    @Getter private String payslipHistoryFilename="";
+    @Getter private String htmlTemplateFilename="";
+    @Getter private String payslipsOutputDirectory="";
 
-    public void load() {
+    public void load() throws IOException {
+        String rootPath = "";
+
         try {
-            generalConfig.load();
-            taxConfig.load();
-        }
-        catch (Exception e) {
-            System.out.println("Failed to load application configuration. Invalid format of config files");
-            e.printStackTrace();
-            throw e;
+        rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String appConfigPath = rootPath + "app.properties";
+
+        Properties appProps = new Properties();
+        appProps.load(new FileInputStream(appConfigPath));
+
+        readProperties(appProps);
+        } catch (IOException e){
+            throw new IOException("Could not read Configuration File: " + rootPath, e);
         }
     }
 
-    public Map<String, GeneralConfigProperty> getGeneralProperties(PersonType personType) {
-        return generalConfig.getProperties(personType);
+    private void readProperties(Properties appProps) {
+        generalConfigFilename= getNormalisedFilenameFromProperties(appProps,"GENERAL_CONFIG_FILENAME");
+        taxConfigFilename= getNormalisedFilenameFromProperties(appProps,"TAX_CONFIG_FILENAME");
+        companyInfoFilename= getNormalisedFilenameFromProperties(appProps,"COMPANY_INFO_FILENAME");
+        payslipHistoryFilename= getNormalisedFilenameFromProperties(appProps,"PAYSLIP_HISTORY_FILENAME");
+        htmlTemplateFilename= getNormalisedFilenameFromProperties(appProps, "HTML_TEMPLATE_FILENAME");
+        payslipsOutputDirectory= getNormalisedFilenameFromProperties(appProps, "PAYSLIPS_OUTPUT_DIRECTORY");
     }
 
-    public List<TaxConfigProperty> getTaxProperties() {
-        return taxConfig.getProperties();
+    private String getNormalisedFilenameFromProperties(Properties properties, String property){
+        //Remove any " in filepath, if any
+        return properties.getProperty(property).trim().replace("\"","");
     }
 }
