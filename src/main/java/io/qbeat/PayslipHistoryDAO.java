@@ -1,7 +1,7 @@
 package io.qbeat;
 
-import io.qbeat.config.FileReader;
-import io.qbeat.config.FileWriter;
+import io.qbeat.file.readers.FileReader;
+import io.qbeat.file.writers.FileWriter;
 import io.qbeat.config.PersonType;
 import io.qbeat.models.Payslip;
 import io.qbeat.models.PayslipHistory;

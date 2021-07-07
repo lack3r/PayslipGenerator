@@ -1,5 +1,7 @@
 package io.qbeat.config;
 
+import io.qbeat.file.readers.CSVReader;
+import io.qbeat.file.readers.FileReader;
 import io.qbeat.models.GeneralConfigProperty;
 
 import java.util.Collections;

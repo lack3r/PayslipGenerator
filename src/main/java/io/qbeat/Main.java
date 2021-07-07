@@ -1,15 +1,14 @@
 package io.qbeat;
 
 import io.qbeat.config.AppConfig;
-import io.qbeat.config.CSVReader;
-import io.qbeat.config.CSVWriter;
-import io.qbeat.config.FileReader;
+import io.qbeat.file.readers.CSVReader;
+import io.qbeat.file.writers.CSVWriter;
+import io.qbeat.file.readers.FileReader;
 import io.qbeat.config.GeneralConfig;
 import io.qbeat.config.TaxConfig;
 import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.Payslip;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 

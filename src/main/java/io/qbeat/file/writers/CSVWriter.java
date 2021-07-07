@@ -1,4 +1,4 @@
-package io.qbeat.config;
+package io.qbeat.file.writers;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class CSVWriter implements io.qbeat.config.FileWriter {
+public class CSVWriter implements io.qbeat.file.writers.FileWriter {
 
     /**
      * @param filename The name of csv file to write on

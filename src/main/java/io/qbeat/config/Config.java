@@ -1,5 +1,7 @@
 package io.qbeat.config;
 
+import io.qbeat.file.readers.FileReader;
+
 public abstract class Config {
     protected final FileReader fileReader;
     protected final String filename;

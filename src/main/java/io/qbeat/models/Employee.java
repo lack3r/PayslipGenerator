@@ -1,6 +1,6 @@
 package io.qbeat.models;
 
-import io.qbeat.config.CSVReader;
+import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
 
 import java.time.LocalDate;

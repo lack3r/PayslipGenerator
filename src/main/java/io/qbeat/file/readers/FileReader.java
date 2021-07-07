@@ -1,4 +1,4 @@
-package io.qbeat.config;
+package io.qbeat.file.readers;
 
 import java.util.List;
 

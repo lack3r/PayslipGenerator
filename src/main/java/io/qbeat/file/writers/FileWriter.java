@@ -1,4 +1,4 @@
-package io.qbeat.config;
+package io.qbeat.file.writers;
 
 import java.io.IOException;
 import java.util.List;
