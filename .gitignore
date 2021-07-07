@@ -2,6 +2,7 @@
 out/
 target/
 output/
+logs/
 generatedPayslips/
 
 *.iml
