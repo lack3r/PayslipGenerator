@@ -1,7 +1,5 @@
 package io.qbeat.models;
 
-import io.qbeat.config.PersonType;
-
 public class GeneralConfigProperty {
     private final PersonType personType;
     private final String name;

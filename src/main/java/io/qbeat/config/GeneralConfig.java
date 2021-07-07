@@ -3,6 +3,7 @@ package io.qbeat.config;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.readers.FileReader;
 import io.qbeat.models.GeneralConfigProperty;
+import io.qbeat.models.PersonType;
 
 import java.util.Collections;
 import java.util.HashMap;

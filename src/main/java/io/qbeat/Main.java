@@ -1,11 +1,9 @@
 package io.qbeat;
 
-import io.qbeat.config.AppConfig;
+import io.qbeat.config.Config;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.writers.CSVWriter;
 import io.qbeat.file.readers.FileReader;
-import io.qbeat.config.GeneralConfig;
-import io.qbeat.config.TaxConfig;
 import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.Payslip;
 
@@ -15,45 +13,49 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        AppConfig appConfig = new AppConfig();
-        GeneralConfig generalConfig = null;
-        TaxConfig taxConfig = null;
-        FileReader fileReader = null;
+
         try {
-            appConfig.load();
+            Config config = loadConfigurationFiles();
 
-            fileReader = CSVReader.getInstance();
+            FileReader csvReader = CSVReader.getInstance();
+            CompanyInfo companyInfo = CompanyInfo.loadFromCSVFile(csvReader, config.getCompanyInfoFilename());
+            final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(csvReader, new CSVWriter(), config.getPayslipHistoryFilename());
 
-            generalConfig = new GeneralConfig(fileReader, appConfig.getGeneralConfigFilename());
-            generalConfig.load();
+            List<Payslip> payslipsToBeGenerated = calculatePayslipsToBeGenerated(config, companyInfo, payslipHistoryDAO);
 
-            taxConfig = new TaxConfig(fileReader, appConfig.getTaxConfigFilename());
-            taxConfig.load();
-        } catch (IOException e) {
-            System.out.println("Failed to load configuration files \n Terminating");
+            generatePayslips(config, payslipsToBeGenerated);
+
+            payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
+        } catch (Exception e) {
+            System.out.println("Failed to calculate and generate invoices \n Terminating");
             e.printStackTrace();
             System.exit(1);
         }
+    }
 
-        CompanyInfo companyInfo = CompanyInfo.loadFromCSVFile(fileReader, appConfig.getCompanyInfoFilename());
-
-        final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(fileReader, new CSVWriter(), appConfig.getPayslipHistoryFilename());
-
-        PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, taxConfig, generalConfig, payslipHistoryDAO);
-        List<Payslip> payslipsToBeGenerated = payslipCalculator.calculate();
-
-        HtmlGenerator htmlGenerator = new HtmlGenerator(appConfig.getHtmlTemplateFilename(), payslipsToBeGenerated, appConfig.getPayslipsOutputDirectory());
-        boolean payslipsGeneratedSuccessfully = htmlGenerator.generate();
-
-        // Prevent from saving payslips in payslip history
-        // if payslips failed to generate successfully
-        if (!payslipsGeneratedSuccessfully) {
-            System.out.println("Failed to generate the payslip(s) in HTML format");
-            System.exit(1);
+    private static Config loadConfigurationFiles() throws Exception {
+        Config config = new Config();
+        try {
+            config.load();
+        } catch (IOException e) {
+            throw new Exception("Failed to load configuration files ", e);
         }
+        return config;
+    }
 
-        System.out.println("HTML(s) of payslip(s) successfully generated");
+    private static void generatePayslips(Config config, List<Payslip> payslipsToBeGenerated) throws IOException {
 
-        payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
+        try {
+            HtmlGenerator htmlGenerator = new HtmlGenerator(config.getHtmlTemplateFilename(), payslipsToBeGenerated, config.getPayslipsOutputDirectory());
+            htmlGenerator.generate();
+            System.out.println("HTML(s) of payslip(s) successfully generated");
+        } catch (IOException e) {
+            throw new IOException("ERROR: Failed to generate the payslip(s) in HTML format ", e);
+        }
+    }
+
+    private static List<Payslip> calculatePayslipsToBeGenerated(Config config, CompanyInfo companyInfo, PayslipHistoryDAO payslipHistoryDAO) {
+        PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, config.getTaxConfig(), config.getGeneralConfig(), payslipHistoryDAO);
+        return payslipCalculator.calculate();
     }
 }

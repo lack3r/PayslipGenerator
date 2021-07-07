@@ -1,6 +1,5 @@
 package io.qbeat.models;
 
-import io.qbeat.config.PersonType;
 import io.qbeat.utils.DateUtil;
 
 import java.util.ArrayList;

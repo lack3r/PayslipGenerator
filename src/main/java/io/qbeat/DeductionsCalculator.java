@@ -1,6 +1,6 @@
 package io.qbeat;
 
-import io.qbeat.config.PersonType;
+import io.qbeat.models.PersonType;
 import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.GeneralConfigProperty;

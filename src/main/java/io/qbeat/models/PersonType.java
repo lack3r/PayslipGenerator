@@ -1,4 +1,4 @@
-package io.qbeat.config;
+package io.qbeat.models;
 
 public enum PersonType {
     EMPLOYEE("Employee"),

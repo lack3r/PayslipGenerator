@@ -32,23 +32,12 @@ public class HtmlGenerator {
     }
 
     /**
-     * @return True if all payslips will be generated successfully, false otherwise
+     * Generates all Invoices
      */
-    public boolean generate() {
+    public void generate() throws IOException {
         for (Payslip payslip : payslips) {
-            try {
-                generatePayslip(payslip);
-            } catch (NoSuchFileException e){
-                System.out.println("ERROR: File " + e.getMessage() + " does not exist");
-                return false;
-            } catch (IOException e) {
-                System.out.println("ERROR: Could not generate payslips");
-                e.printStackTrace();
-                return false;
-            }
+            generatePayslip(payslip);
         }
-
-        return true;
     }
 
     /**

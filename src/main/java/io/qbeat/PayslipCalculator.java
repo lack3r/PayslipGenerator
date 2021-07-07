@@ -1,8 +1,7 @@
 package io.qbeat;
 
-import io.qbeat.config.AppConfig;
 import io.qbeat.config.GeneralConfig;
-import io.qbeat.config.PersonType;
+import io.qbeat.models.PersonType;
 import io.qbeat.config.TaxConfig;
 import io.qbeat.models.CompanyInfo;
 import io.qbeat.models.DeductionsInfo;
