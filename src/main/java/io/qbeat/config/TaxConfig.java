@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TaxConfig{
+public class TaxConfig {
     private static final Logger logger = LogManager.getLogger(TaxConfig.class);
 
     private final List<TaxConfigProperty> taxProperties = new ArrayList<>();

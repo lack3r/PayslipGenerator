@@ -44,8 +44,7 @@ public class PayslipCalculator {
                 logger.info("Payslip info of employee with Id " + employee.getId() + " was successfully calculated");
                 payslips.add(employeePayslip);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Failed to generate payslip info of employees. Process aborted", e);
             throw e;
         }

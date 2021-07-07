@@ -49,9 +49,9 @@ public class HtmlGenerator {
      * @param payslip A Payslip object
      */
     private void generatePayslip(Payslip payslip) throws IOException {
-            String template = addInfo(loadTemplateFile(), payslip);
-            String payslipName = getPayslipFilename(payslip.getEmployee().getId());
-            createNewPayslip(template, payslipName);
+        String template = addInfo(loadTemplateFile(), payslip);
+        String payslipName = getPayslipFilename(payslip.getEmployee().getId());
+        createNewPayslip(template, payslipName);
     }
 
     /**
@@ -155,7 +155,7 @@ public class HtmlGenerator {
             logger.info("Creating directory: " + outputDirPath);
             boolean wasDirectoryWithParentsCreated = outputDir.mkdirs();
 
-            if (!wasDirectoryWithParentsCreated){
+            if (!wasDirectoryWithParentsCreated) {
                 throw new IOException("Directory " + outputDirPath + " could not be created");
             }
         }

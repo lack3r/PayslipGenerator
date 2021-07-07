@@ -7,9 +7,12 @@ import lombok.Getter;
 import java.io.IOException;
 
 public class Config {
-    @Getter private AppConfig appConfig;
-    @Getter private GeneralConfig generalConfig;
-    @Getter private TaxConfig taxConfig;
+    @Getter
+    private AppConfig appConfig;
+    @Getter
+    private GeneralConfig generalConfig;
+    @Getter
+    private TaxConfig taxConfig;
 
     public void load() throws IOException {
         appConfig = new AppConfig();
@@ -24,19 +27,19 @@ public class Config {
         taxConfig.load();
     }
 
-    public String getCompanyInfoFilename(){
+    public String getCompanyInfoFilename() {
         return appConfig.getCompanyInfoFilename();
     }
 
-    public String getPayslipHistoryFilename(){
+    public String getPayslipHistoryFilename() {
         return appConfig.getPayslipHistoryFilename();
     }
 
-    public String getPayslipsOutputDirectory(){
+    public String getPayslipsOutputDirectory() {
         return appConfig.getPayslipsOutputDirectory();
     }
 
-    public String getHtmlTemplateFilename(){
+    public String getHtmlTemplateFilename() {
         return appConfig.getHtmlTemplateFilename();
     }
 }

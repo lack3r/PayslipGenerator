@@ -66,7 +66,7 @@ public class CSVReader implements FileReader {
      * @param filename The filename to create the file reader
      * @return A FileReader object
      * @throws FileNotFoundException if the named file does not exist, is a directory rather than a regular file,
-     * or for some other reason cannot be opened for reading.
+     *                               or for some other reason cannot be opened for reading.
      */
     private java.io.FileReader getFileReader(String filename) throws FileNotFoundException {
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();

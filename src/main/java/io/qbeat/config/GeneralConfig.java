@@ -24,7 +24,7 @@ public class GeneralConfig {
     private boolean isLoaded;
 
     public GeneralConfig(FileReader fileReader, String filename) {
-        this.fileReader = fileReader; 
+        this.fileReader = fileReader;
         this.filename = filename;
     }
 

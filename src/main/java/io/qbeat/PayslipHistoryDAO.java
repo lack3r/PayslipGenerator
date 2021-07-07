@@ -48,7 +48,7 @@ public class PayslipHistoryDAO {
     }
 
     /**
-     * @param id The id of the employee to retrieve payslip histories
+     * @param id         The id of the employee to retrieve payslip histories
      * @param personType The person type to retrieve payslip histories
      * @return All payslip histories of the given employee and person type
      */
@@ -79,15 +79,14 @@ public class PayslipHistoryDAO {
         try {
             fileWriter.write(filename, entriesToInsert, true);
             logger.debug("Payslip successfully inserted: " + payslip);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Failed to insert payslip: " + payslip, e);
         }
     }
 
     /**
      * @param oldPayslipEntries The payslip histories to update
-     * @param newPayslip The new payslip
+     * @param newPayslip        The new payslip
      */
     public void update(List<PayslipHistory> oldPayslipEntries, Payslip newPayslip) {
         final List<PayslipHistory> entriesWithoutOldEntries = getAll().stream()
@@ -100,8 +99,7 @@ public class PayslipHistoryDAO {
         try {
             fileWriter.write(filename, entriesToInsert, false);
             logger.info("Payslip successfully updated: " + newPayslip);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Failed to update old payslip entries: " + oldPayslipEntries + "\n with new payslip: " + newPayslip, e);
         }
     }
