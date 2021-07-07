@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PayslipHistoryDAO {
-    private static final String PROPERTY_DELIMITER = ",";
     private final FileReader fileReader;
     private final FileWriter fileWriter;
     private final String filename;
@@ -111,7 +110,7 @@ public class PayslipHistoryDAO {
     public void insertOnDuplicateUpdate(Payslip payslip) {
         List<PayslipHistory> employeeCurrentMonthEntries = findByEmployeeIdAndInCurrentMonth(payslip.getEmployee().getId());
 
-        //TODO WHAT ABOUT DECEMBER AND 13TH SALARY?
+        // TODO: aloizou 07/07/21 What about the December and 13th Salary?
         if (!employeeCurrentMonthEntries.isEmpty()) {
             update(employeeCurrentMonthEntries, payslip);
             return;

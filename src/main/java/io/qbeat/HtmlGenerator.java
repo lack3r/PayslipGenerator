@@ -48,7 +48,7 @@ public class HtmlGenerator {
 
     /**
      * @param payslip A Payslip object
-     * @throws IOException
+     * @throws IOException If an I/O error occurs
      */
     private void generatePayslip(Payslip payslip) throws IOException {
         String template = addInfo(loadTemplateFile(), payslip);
@@ -149,14 +149,18 @@ public class HtmlGenerator {
     /**
      * @param content  The content of the html file to be created
      * @param filename The name of the file to be created
-     * @throws IOException
+     * @throws IOException If an I/O error occurs
      */
     private void createNewPayslip(String content, String filename) throws IOException {
         String outputDirPath = System.getProperty("user.dir") + File.separator + OUTPUT_FOLDER;
         File outputDir = new File(outputDirPath);
         if (!outputDir.exists()) {
             System.out.println("Creating directory: " + outputDirPath);
-            outputDir.mkdir();
+            boolean wasDirectoryCreated = outputDir.mkdir();
+
+            if (!wasDirectoryCreated){
+                throw new IOException("Directory" + outputDirPath + "could not be created");
+            }
         }
 
         String filepath = outputDir + File.separator + filename + ".html";

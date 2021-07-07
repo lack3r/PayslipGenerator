@@ -4,7 +4,7 @@ public enum PersonType {
     EMPLOYEE("Employee"),
     EMPLOYER("Employer");
 
-    private String value;
+    private final String value;
 
     PersonType(String value) {
         this.value = value;

@@ -148,7 +148,7 @@ public class DeductionsCalculator {
     }
 
     private double calculateDeductionsForMonth(GeneralConfigProperty property) {
-        // TODO MaxContributions are not considered in calculations
+        // TODO: aloizou 07/07/21 MaxContributions are not yet considered in calculations
 //        if (hasReachedMaxContributions(property)) {
 //            return DecimalUtil.round(property.getMaxContributions() * property.getContributionsPercentage() / 100.0/ monthsToConsider);
 //        }

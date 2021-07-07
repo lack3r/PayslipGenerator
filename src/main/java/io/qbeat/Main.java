@@ -33,11 +33,11 @@ public class Main {
         List<Payslip> newPayslips = payslipCalculator.calculate();
 
         HtmlGenerator htmlGenerator = new HtmlGenerator(HTML_TEMPLATE_FILENAME, newPayslips);
-        boolean htmlsGeneratedSuccessfully = htmlGenerator.generate();
+        boolean payslipsGeneratedSuccessfully = htmlGenerator.generate();
 
         // Prevent from saving payslips in payslip history
         // if payslips failed to generate successfully
-        if (!htmlsGeneratedSuccessfully) {
+        if (!payslipsGeneratedSuccessfully) {
             System.out.println("Failed to generate the HTML(s) of payslip(s)");
             System.exit(1);
         }
