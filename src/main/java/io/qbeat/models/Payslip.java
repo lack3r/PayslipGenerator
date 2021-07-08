@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Payslip {
-    private final CompanyInfo companyInfo;
+    private final Company company;
     private final Employee employee;
     private final DeductionsInfo employeeDeductionsInfo;
     private final DeductionsInfo employerDeductionsInfo;
 
-    public Payslip(CompanyInfo companyInfo, Employee employee, DeductionsInfo employeeDeductionsInfo, DeductionsInfo employerDeductionsInfo) {
-        this.companyInfo = companyInfo;
+    public Payslip(Company company, Employee employee, DeductionsInfo employeeDeductionsInfo, DeductionsInfo employerDeductionsInfo) {
+        this.company = company;
         this.employee = employee;
         this.employeeDeductionsInfo = employeeDeductionsInfo;
         this.employerDeductionsInfo = employerDeductionsInfo;
     }
 
-    public CompanyInfo getCompanyInfo() {
-        return companyInfo;
+    public Company getCompanyInfo() {
+        return company;
     }
 
     public Employee getEmployee() {
@@ -63,7 +63,7 @@ public class Payslip {
     @Override
     public String toString() {
         return "Payslip{" +
-                "companyInfo=" + companyInfo +
+                "company=" + company +
                 ", employee=" + employee +
                 ", employeeDeductionsInfo=" + employeeDeductionsInfo +
                 ", employerDeductionsInfo=" + employerDeductionsInfo +

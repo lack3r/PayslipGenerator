@@ -4,7 +4,7 @@ import io.qbeat.config.Config;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.writers.CSVWriter;
 import io.qbeat.file.readers.FileReader;
-import io.qbeat.models.CompanyInfo;
+import io.qbeat.models.Company;
 import io.qbeat.models.Payslip;
 
 import java.io.IOException;
@@ -25,10 +25,10 @@ public class Main {
             Config config = loadConfigurationFiles();
 
             FileReader csvReader = CSVReader.getInstance();
-            CompanyInfo companyInfo = CompanyInfo.loadFromCSVFile(csvReader, config.getCompanyInfoFilename());
+            Company company = Company.loadFromCSVFile(csvReader, config.getCompanyInfoFilename());
             final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(csvReader, new CSVWriter(), config.getPayslipHistoryFilename());
 
-            List<Payslip> payslipsToBeGenerated = calculatePayslipsToBeGenerated(config, companyInfo, payslipHistoryDAO);
+            List<Payslip> payslipsToBeGenerated = calculatePayslipsToBeGenerated(config, company, payslipHistoryDAO);
 
             generatePayslips(config, payslipsToBeGenerated);
 
@@ -60,8 +60,8 @@ public class Main {
         }
     }
 
-    private static List<Payslip> calculatePayslipsToBeGenerated(Config config, CompanyInfo companyInfo, PayslipHistoryDAO payslipHistoryDAO) {
-        PayslipCalculator payslipCalculator = new PayslipCalculator(companyInfo, config.getTaxConfig(), config.getGeneralConfig(), payslipHistoryDAO);
+    private static List<Payslip> calculatePayslipsToBeGenerated(Config config, Company company, PayslipHistoryDAO payslipHistoryDAO) {
+        PayslipCalculator payslipCalculator = new PayslipCalculator(company, config.getTaxConfig(), config.getGeneralConfig(), payslipHistoryDAO);
         return payslipCalculator.calculate();
     }
 }

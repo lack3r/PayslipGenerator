@@ -1,6 +1,6 @@
 package io.qbeat;
 
-import io.qbeat.models.CompanyInfo;
+import io.qbeat.models.Company;
 import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
@@ -15,7 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
@@ -70,13 +69,13 @@ public class HtmlGenerator {
 
     /**
      * @param template    An html template
-     * @param companyInfo A CompanyInfo object
+     * @param company A Company object
      * @return An html with all the company info
      */
-    private String addCompanyInfo(String template, CompanyInfo companyInfo) {
-        return template.replace("{companyName}", companyInfo.getName())
-                .replace("{companyAddress}", companyInfo.getAddress())
-                .replace("{companyPhone}", companyInfo.getPhone());
+    private String addCompanyInfo(String template, Company company) {
+        return template.replace("{companyName}", company.getName())
+                .replace("{companyAddress}", company.getAddress())
+                .replace("{companyPhone}", company.getPhone());
     }
 
     /**

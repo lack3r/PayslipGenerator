@@ -3,7 +3,7 @@ package io.qbeat;
 import io.qbeat.config.GeneralConfig;
 import io.qbeat.models.PersonType;
 import io.qbeat.config.TaxConfig;
-import io.qbeat.models.CompanyInfo;
+import io.qbeat.models.Company;
 import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
@@ -19,13 +19,13 @@ public class PayslipCalculator {
     // TODO Hard-coded months
     private static final int MONTHS_TO_CONSIDER = 13;
 
-    private final CompanyInfo companyInfo;
+    private final Company company;
     private final TaxConfig taxConfig;
     private final PayslipHistoryDAO payslipHistoryDAO;
     private final GeneralConfig generalConfig;
 
-    public PayslipCalculator(CompanyInfo companyInfo, TaxConfig taxConfig, GeneralConfig generalConfig, PayslipHistoryDAO payslipHistoryDAO) {
-        this.companyInfo = companyInfo;
+    public PayslipCalculator(Company company, TaxConfig taxConfig, GeneralConfig generalConfig, PayslipHistoryDAO payslipHistoryDAO) {
+        this.company = company;
         this.taxConfig = taxConfig;
         this.generalConfig = generalConfig;
         this.payslipHistoryDAO = payslipHistoryDAO;
@@ -37,8 +37,8 @@ public class PayslipCalculator {
     public List<Payslip> calculate() {
         List<Payslip> payslips = new ArrayList<>();
         try {
-            logger.debug("Total of " + companyInfo.getEmployees().size() + " payslip(s) info to be calculated");
-            for (Employee employee : companyInfo.getEmployees()) {
+            logger.debug("Total of " + company.getEmployees().size() + " payslip(s) info to be calculated");
+            for (Employee employee : company.getEmployees()) {
                 Payslip employeePayslip = calculateEmployeePayslip(employee);
 
                 logger.info("Payslip info of employee with Id " + employee.getId() + " was successfully calculated");
@@ -68,6 +68,6 @@ public class PayslipCalculator {
         DeductionsInfo employeeDeductionsInfo = employeeDeductionsCalculator.calculate();
         DeductionsInfo employerDeductionsInfo = employerDeductionsCalculator.calculate();
 
-        return new Payslip(companyInfo, employee, employeeDeductionsInfo, employerDeductionsInfo);
+        return new Payslip(company, employee, employeeDeductionsInfo, employerDeductionsInfo);
     }
 }
