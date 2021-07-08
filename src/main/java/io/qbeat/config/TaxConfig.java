@@ -6,6 +6,7 @@ import io.qbeat.models.TaxConfigProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ public class TaxConfig {
         List<String> propertyInfo = CSVReader.splitLine(line);
 
         return new TaxConfigProperty(Integer.parseInt(propertyInfo.get(0)), Integer.parseInt(propertyInfo.get(1)),
-                Double.parseDouble(propertyInfo.get(2)));
+                new BigDecimal(propertyInfo.get(2)));
     }
 
     private void addProperty(TaxConfigProperty property) {
