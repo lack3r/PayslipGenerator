@@ -22,7 +22,7 @@ public class PayslipHistory {
     private BigDecimal nhs;
 
     /**
-     * Gets a CSV line comma separated and returns a PayslipHistory object
+     * Gets a CSV line comma separated and returns a PayslipHistory object.
      *
      * @param line A CSV line comma separated
      * @return A PayslipHistory object

@@ -9,6 +9,7 @@ import io.qbeat.utils.DateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,10 +31,21 @@ public class PayslipHistoryDAO {
      * @return All payslip histories
      */
     public List<PayslipHistory> getAll() {
-        return fileReader.read(filename)
-                .stream()
-                .map(PayslipHistory::fromCSVLine)
-                .collect(Collectors.toList());
+
+        List<PayslipHistory> payslipHistory = new ArrayList<>();
+        // Since the first time the program runs there is no historic file,
+        // It could be fine to not have a history file
+        // Thus, we are going to return an empty list in this case
+        // And log this incident as a Warning
+        try {
+            payslipHistory = fileReader.read(filename)
+                    .stream()
+                    .map(PayslipHistory::fromCSVLine)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            logger.warn("The payslip histories file could not be found. Is this the first time this program is ran?");
+        }
+        return payslipHistory;
     }
 
     /**

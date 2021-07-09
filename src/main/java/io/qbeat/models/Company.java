@@ -3,6 +3,7 @@ package io.qbeat.models;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.readers.FileReader;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,8 +21,15 @@ public class Company {
         this.employees = employees;
     }
 
-    public static Company loadFromCSVFile(FileReader fileReader, String filename) {
-        List<String> fileLines = fileReader.read(filename);
+    public static Company loadFromCSVFile(FileReader fileReader, String filename) throws IOException {
+
+        List<String> fileLines;
+        try {
+            fileLines = fileReader.read(filename);
+        } catch (IOException e) {
+            throw new IOException("The Companies' input file could not be found", e);
+        }
+
         List<String> companyInfo = CSVReader.splitLine(fileLines.remove(0));
 
         List<Employee> companyEmployees = fileLines.stream()

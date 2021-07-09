@@ -24,6 +24,7 @@ public class DeductionsCalculator {
 
     private final Deductions deductions = new Deductions();
     private List<PayslipHistory> payslipHistories;
+
     public DeductionsCalculator(PersonType personType, Employee employee, TaxCalculator taxCalculator,
                                 Map<String, GeneralConfigProperty> configProperties,
                                 PayslipHistoryDAO payslipHistoryDAO, int monthsToConsider) {

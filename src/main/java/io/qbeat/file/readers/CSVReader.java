@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,14 +51,8 @@ public class CSVReader implements FileReader {
      * @param filename The filename to read
      * @return The lines of the file in a list
      */
-    public List<String> read(String filename) {
-        java.io.FileReader fileReader;
-        try {
-            fileReader = getFileReader(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+    public List<String> read(String filename) throws IOException{
+        java.io.FileReader fileReader = getFileReader(filename);
 
         return readLines(fileReader);
     }
@@ -68,13 +63,19 @@ public class CSVReader implements FileReader {
      * @throws FileNotFoundException if the named file does not exist, is a directory rather than a regular file,
      *                               or for some other reason cannot be opened for reading.
      */
-    private java.io.FileReader getFileReader(String filename) throws FileNotFoundException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+    private java.io.FileReader getFileReader(String filename) throws IOException {
+        URL resource = Thread.currentThread().getContextClassLoader().getResource("");
+
+        if (resource == null) {
+            throw new IOException("Could not get resource " + filename);
+        }
+
+        String rootPath = resource.getPath();
         String filepath = rootPath + File.separator + filename;
 
         File file = new File(filepath);
         if (!file.exists() || !file.isFile()) {
-            throw new IllegalArgumentException("File not found: " + filepath);
+            throw new FileNotFoundException("File not found: " + filepath);
         }
 
         return new java.io.FileReader(file);

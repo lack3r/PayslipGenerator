@@ -7,6 +7,7 @@ import io.qbeat.models.PersonType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,12 +30,18 @@ public class GeneralConfig {
         this.filename = filename;
     }
 
-    public void load() {
+    public void load() throws IOException {
         if (isLoaded) {
             return;
         }
 
-        List<String> configLines = fileReader.read(filename);
+        List<String> configLines;
+        try {
+            configLines = fileReader.read(filename);
+        } catch (IOException e) {
+            throw new IOException("Could not read General Configuration file", e);
+        }
+
         for (String line : configLines) {
             GeneralConfigProperty property = parseLineAndGetProperty(line);
 

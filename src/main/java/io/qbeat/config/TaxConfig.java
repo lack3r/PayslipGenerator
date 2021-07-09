@@ -6,6 +6,7 @@ import io.qbeat.models.TaxConfigProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,12 +25,17 @@ public class TaxConfig {
         this.filename = filename;
     }
 
-    public void load() {
+    void load() throws IOException {
         if (isLoaded) {
             return;
         }
 
-        List<String> configLines = fileReader.read(filename);
+        List<String> configLines;
+        try {
+            configLines = fileReader.read(filename);
+        } catch (IOException e) {
+            throw new IOException("Could not read Tax Configuration file", e);
+        }
         for (String line : configLines) {
             TaxConfigProperty property = parseLineAndGetProperty(line);
 
