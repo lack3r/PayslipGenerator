@@ -175,10 +175,13 @@ public class HtmlGenerator {
         }
 
         String filepath = outputDir + File.separator + filename + ".html";
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filepath));
 
-        writer.write(content);
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))){
+            writer.write(content);
+        } catch (IOException e){
+            logger.error("Could not write to file", e);
+            throw e;
+        }
     }
 
     /**
