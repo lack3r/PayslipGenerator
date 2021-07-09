@@ -3,6 +3,7 @@ package io.qbeat.models;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,10 +11,10 @@ public class Employee {
     private final String id;
     private final String socialInsuranceId;
     private final String fullName;
-    private final double grossSalary;
+    private final BigDecimal grossSalary;
     private final LocalDate dateStarted;
 
-    public Employee(String id, String socialInsuranceId, String fullName, double grossSalary, LocalDate dateStarted) {
+    public Employee(String id, String socialInsuranceId, String fullName, BigDecimal grossSalary, LocalDate dateStarted) {
         this.id = id;
         this.socialInsuranceId = socialInsuranceId;
         this.fullName = fullName;
@@ -32,7 +33,7 @@ public class Employee {
                 parts.get(0),
                 parts.get(1),
                 parts.get(2),
-                Double.parseDouble(parts.get(3)),
+                new BigDecimal(parts.get(3)),
                 DateUtil.dateStrToLocalDate(parts.get(4), "dd/MM/yyyy")
         );
     }
@@ -49,7 +50,7 @@ public class Employee {
         return fullName;
     }
 
-    public double getGrossSalary() {
+    public BigDecimal getGrossSalary() {
         return grossSalary;
     }
 

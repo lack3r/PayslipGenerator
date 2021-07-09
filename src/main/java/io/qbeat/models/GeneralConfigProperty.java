@@ -1,12 +1,14 @@
 package io.qbeat.models;
 
+import java.math.BigDecimal;
+
 public class GeneralConfigProperty {
     private final PersonType personType;
     private final String name;
-    private final double contributionsPercentage;
-    private final double maxContributions;
+    private final BigDecimal contributionsPercentage;
+    private final BigDecimal maxContributions;
 
-    public GeneralConfigProperty(String personType, String name, double contributionsPercentage, double maxContributions) {
+    public GeneralConfigProperty(String personType, String name, BigDecimal contributionsPercentage, BigDecimal maxContributions) {
         this.personType = PersonType.fromValue(personType);
         this.name = name;
         this.contributionsPercentage = contributionsPercentage;
@@ -21,15 +23,15 @@ public class GeneralConfigProperty {
         return name;
     }
 
-    public double getContributionsPercentage() {
+    public BigDecimal getContributionsPercentage() {
         return contributionsPercentage;
     }
 
     public boolean hasMaxContributions() {
-        return maxContributions > 0;
+        return maxContributions.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    public double getMaxContributions() {
+    public BigDecimal getMaxContributions() {
         return maxContributions;
     }
 

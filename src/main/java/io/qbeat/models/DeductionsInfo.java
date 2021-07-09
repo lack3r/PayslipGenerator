@@ -1,140 +1,80 @@
 package io.qbeat.models;
 
-import io.qbeat.utils.DecimalUtil;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class DeductionsInfo {
-    private double socialInsuranceForMonth;
-    private double socialInsuranceYearToDate;
 
-    private double cohesionFundForMonth;
-    private double cohesionFundYearToDate;
+    private static final int DECIMALS = 2;
 
-    private double incomeTaxForMonth;
-    private double incomeTaxYearToDate;
+    @Getter
+    @Setter
+    private BigDecimal socialInsuranceForMonth = BigDecimal.ZERO;
+    @Getter
+    @Setter
+    private BigDecimal socialInsuranceYearToDate = BigDecimal.ZERO;
 
-    private double redundancyFundForMonth;
-    private double redundancyFundYearToDate;
+    @Getter
+    @Setter
+    private BigDecimal cohesionFundForMonth = BigDecimal.ZERO;
+    @Getter
+    @Setter
+    private BigDecimal cohesionFundYearToDate = BigDecimal.ZERO;
 
-    private double industrialTrainingForMonth;
-    private double industrialTrainingYearToDate;
+    @Getter
+    @Setter
+    private BigDecimal incomeTaxForMonth = BigDecimal.ZERO;
+    @Getter
+    @Setter
+    private BigDecimal incomeTaxYearToDate = BigDecimal.ZERO;
 
-    private double nhsForMonth;
-    private double nhsYearToDate;
+    @Getter
+    @Setter
+    private BigDecimal redundancyFundForMonth = BigDecimal.ZERO;
+    @Getter
+    @Setter
+    private BigDecimal redundancyFundYearToDate = BigDecimal.ZERO;
 
-    public double getSocialInsuranceForMonth() {
-        return socialInsuranceForMonth;
+    @Getter
+    @Setter
+    private BigDecimal industrialTrainingForMonth = BigDecimal.ZERO;
+    @Getter
+    @Setter
+    private BigDecimal industrialTrainingYearToDate = BigDecimal.ZERO;
+
+    @Getter
+    @Setter
+    private BigDecimal nhsForMonth = BigDecimal.ZERO;
+
+    @Getter
+    @Setter
+    private BigDecimal nhsYearToDate = BigDecimal.ZERO;
+
+    public BigDecimal getMonthlyNonTaxableAmount() {
+        return socialInsuranceForMonth.add(nhsForMonth).setScale(DECIMALS, RoundingMode.HALF_UP);
     }
 
-    public void setSocialInsuranceForMonth(double socialInsuranceForMonth) {
-        this.socialInsuranceForMonth = socialInsuranceForMonth;
+    public BigDecimal getTotalDeductionsForMonth() {
+        return socialInsuranceForMonth
+                .add(cohesionFundForMonth)
+                .add(incomeTaxForMonth)
+                .add(redundancyFundForMonth)
+                .add(industrialTrainingForMonth)
+                .add(nhsForMonth)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
     }
 
-    public double getSocialInsuranceYearToDate() {
-        return socialInsuranceYearToDate;
-    }
-
-    public void setSocialInsuranceYearToDate(double socialInsuranceYearToDate) {
-        this.socialInsuranceYearToDate = socialInsuranceYearToDate;
-    }
-
-    public double getCohesionFundForMonth() {
-        return cohesionFundForMonth;
-    }
-
-    public void setCohesionFundForMonth(double cohesionFundForMonth) {
-        this.cohesionFundForMonth = cohesionFundForMonth;
-    }
-
-    public double getCohesionFundYearToDate() {
-        return cohesionFundYearToDate;
-    }
-
-    public void setCohesionFundYearToDate(double cohesionFundYearToDate) {
-        this.cohesionFundYearToDate = cohesionFundYearToDate;
-    }
-
-    public double getIncomeTaxForMonth() {
-        return incomeTaxForMonth;
-    }
-
-    public void setIncomeTaxForMonth(double incomeTaxForMonth) {
-        this.incomeTaxForMonth = incomeTaxForMonth;
-    }
-
-    public double getIncomeTaxYearToDate() {
-        return incomeTaxYearToDate;
-    }
-
-    public void setIncomeTaxYearToDate(double incomeTaxYearToDate) {
-        this.incomeTaxYearToDate = incomeTaxYearToDate;
-    }
-
-    public double getRedundancyFundForMonth() {
-        return redundancyFundForMonth;
-    }
-
-    public void setRedundancyFundForMonth(double redundancyFundForMonth) {
-        this.redundancyFundForMonth = redundancyFundForMonth;
-    }
-
-    public double getRedundancyFundYearToDate() {
-        return redundancyFundYearToDate;
-    }
-
-    public void setRedundancyFundYearToDate(double redundancyFundYearToDate) {
-        this.redundancyFundYearToDate = redundancyFundYearToDate;
-    }
-
-    public double getIndustrialTrainingForMonth() {
-        return industrialTrainingForMonth;
-    }
-
-    public void setIndustrialTrainingForMonth(double industrialTrainingForMonth) {
-        this.industrialTrainingForMonth = industrialTrainingForMonth;
-    }
-
-    public double getIndustrialTrainingYearToDate() {
-        return industrialTrainingYearToDate;
-    }
-
-    public void setIndustrialTrainingYearToDate(double industrialTrainingYearToDate) {
-        this.industrialTrainingYearToDate = industrialTrainingYearToDate;
-    }
-
-    public double getNhsForMonth() {
-        return nhsForMonth;
-    }
-
-    public void setNhsForMonth(double nhsForMonth) {
-        this.nhsForMonth = nhsForMonth;
-    }
-
-    public double getNhsYearToDate() {
-        return nhsYearToDate;
-    }
-
-    public void setNhsYearToDate(double nhsYearToDate) {
-        this.nhsYearToDate = nhsYearToDate;
-    }
-
-    public double getMonthlyNonTaxableAmount() {
-        double amount = socialInsuranceForMonth + nhsForMonth;
-
-        return DecimalUtil.round(amount);
-    }
-
-    public double getTotalDeductionsForMonth() {
-        double total = socialInsuranceForMonth + cohesionFundForMonth + incomeTaxForMonth + redundancyFundForMonth +
-                industrialTrainingForMonth + nhsForMonth;
-
-        return DecimalUtil.round(total);
-    }
-
-    public double getTotalDeductionsYearToDate() {
-        double total = socialInsuranceYearToDate + cohesionFundYearToDate + incomeTaxYearToDate +
-                redundancyFundYearToDate + industrialTrainingYearToDate + nhsYearToDate;
-
-        return DecimalUtil.round(total);
+    public BigDecimal getTotalDeductionsYearToDate() {
+        return socialInsuranceYearToDate
+                .add(cohesionFundYearToDate)
+                .add(incomeTaxYearToDate)
+                .add(redundancyFundYearToDate)
+                .add(industrialTrainingYearToDate)
+                .add(nhsYearToDate)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
     }
 
     @Override

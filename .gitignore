@@ -4,5 +4,6 @@ target/
 output/
 logs/
 generatedPayslips/
-
+remporaryReadme.md
+payslip_history.csv
 *.iml

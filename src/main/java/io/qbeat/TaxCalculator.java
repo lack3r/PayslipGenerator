@@ -1,53 +1,60 @@
 package io.qbeat;
 
 import io.qbeat.models.TaxConfigProperty;
-import io.qbeat.utils.DecimalUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class TaxCalculator {
     private final int monthsToConsider;
-    private final double employeeMonthlySalary;
+    private final BigDecimal employeeMonthlySalary;
     private final List<TaxConfigProperty> configProperties;
-    private double employeeYearlyTaxableSalary;
+    private BigDecimal employeeYearlyTaxableSalary;
+    private static final int DECIMALS = 2;
 
-    public TaxCalculator(double employeeMonthlySalary, List<TaxConfigProperty> configProperties, int monthsToConsider) {
+    public TaxCalculator(BigDecimal employeeMonthlySalary, List<TaxConfigProperty> configProperties, int monthsToConsider) {
         this.employeeMonthlySalary = employeeMonthlySalary;
         this.configProperties = configProperties;
         this.monthsToConsider = monthsToConsider;
     }
 
-    public double calculate(double monthlyNonTaxableAmount) {
+    public BigDecimal calculate(BigDecimal monthlyNonTaxableAmount) {
         computeEmployeeYearlyTaxableSalary(monthlyNonTaxableAmount);
 
-        double tax = 0.0;
+        BigDecimal tax = BigDecimal.ZERO;
         for (TaxConfigProperty property : configProperties) {
-            tax += calculateTaxRangeDeductions(property);
+            tax = tax.add(calculateTaxRangeDeductions(property));
         }
 
-        return DecimalUtil.round(tax);
+        return tax;
     }
 
-    private double calculateTaxRangeDeductions(TaxConfigProperty taxProperty) {
+    private BigDecimal calculateTaxRangeDeductions(TaxConfigProperty taxProperty) {
         if (!shouldPayTax(taxProperty)) {
-            return 0.0;
+            return BigDecimal.ZERO;
         }
 
         // When employee's salary is more than the ending price of the particular tax range
-        if (employeeYearlyTaxableSalary >= taxProperty.getRangeEndPrice()) {
-            return (taxProperty.getRangeEndPrice() - taxProperty.getRangeStartPrice()) * taxProperty.getRate() / 100.0 / monthsToConsider;
+        BigDecimal rate = taxProperty.getRate().divide(BigDecimal.valueOf(100.0), DECIMALS, RoundingMode.HALF_UP);
+        if (employeeYearlyTaxableSalary.compareTo(BigDecimal.valueOf(taxProperty.getRangeEndPrice())) >= 0) {
+            int rangeDifference = taxProperty.getRangeEndPrice() - taxProperty.getRangeStartPrice();
+            return BigDecimal.valueOf(rangeDifference).multiply(rate).divide(BigDecimal.valueOf(monthsToConsider), DECIMALS, RoundingMode.HALF_UP);
         }
+        BigDecimal salaryToBeTaxed = employeeYearlyTaxableSalary.subtract(BigDecimal.valueOf(taxProperty.getRangeStartPrice()));
+        BigDecimal yearlyEstimatedTaxAmount = salaryToBeTaxed.multiply(rate);
 
-        return (employeeYearlyTaxableSalary - taxProperty.getRangeStartPrice()) * taxProperty.getRate() / 100.0 / monthsToConsider;
+        // Tax for the month
+        return yearlyEstimatedTaxAmount.divide(BigDecimal.valueOf(monthsToConsider), DECIMALS, RoundingMode.HALF_UP);
     }
 
     private boolean shouldPayTax(TaxConfigProperty property) {
-        return property.getRate() > 0 && employeeYearlyTaxableSalary >= property.getRangeStartPrice();
+        return property.getRate().compareTo(BigDecimal.ZERO) > 0 && employeeYearlyTaxableSalary.compareTo(BigDecimal.valueOf(property.getRangeStartPrice())) >= 0;
     }
 
-    private void computeEmployeeYearlyTaxableSalary(double monthlyNonTaxableAmount) {
-        final double employeeYearlySalary = employeeMonthlySalary * monthsToConsider;
-        final double yearlyNonTaxableAmount = monthlyNonTaxableAmount * monthsToConsider;
-        employeeYearlyTaxableSalary = employeeYearlySalary - yearlyNonTaxableAmount;
+    private void computeEmployeeYearlyTaxableSalary(BigDecimal monthlyNonTaxableAmount) {
+        final BigDecimal employeeYearlySalary = employeeMonthlySalary.multiply(BigDecimal.valueOf(monthsToConsider));
+        final BigDecimal yearlyNonTaxableAmount = monthlyNonTaxableAmount.multiply(BigDecimal.valueOf(monthsToConsider));
+        employeeYearlyTaxableSalary = employeeYearlySalary.subtract(yearlyNonTaxableAmount);
     }
 }

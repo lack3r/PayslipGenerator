@@ -5,7 +5,6 @@ import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
 import io.qbeat.utils.DateUtil;
-import io.qbeat.utils.DecimalUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,9 +12,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.Currency;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,10 +31,21 @@ public class HtmlGenerator {
     private final List<Payslip> payslips;
     private final String outputDirectory;
 
+    private final DecimalFormat formatter = new DecimalFormat();
+
     public HtmlGenerator(String templateFilename, List<Payslip> payslips, String outputDirectory) {
         this.templateFilename = templateFilename;
         this.payslips = payslips;
         this.outputDirectory = outputDirectory;
+        configureAmountsFormatter();
+    }
+
+    private void configureAmountsFormatter() {
+        formatter.setMaximumFractionDigits(2);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setGroupingUsed(false);
+        Currency currency = Currency.getInstance("EUR");
+        formatter.setCurrency(currency);
     }
 
     /**
@@ -85,18 +98,19 @@ public class HtmlGenerator {
      */
     private String addEmployeeInfo(String template, Payslip payslip) {
         Employee employee = payslip.getEmployee();
-        double netSalary = employee.getGrossSalary() - payslip.getEmployeeDeductionsInfo().getTotalDeductionsForMonth();
+        BigDecimal netSalary = employee.getGrossSalary()
+                .subtract(payslip.getEmployeeDeductionsInfo().getTotalDeductionsForMonth());
 
         return template.replace("{employeeName}", employee.getFullName())
                 .replace("{employeeId}", employee.getId())
                 .replace("{employeeSocialInsuranceId}", employee.getSocialInsuranceId())
                 .replace("{date}", DateUtil.localDateToDateStr(DateUtil.now(), "dd/MM/yyyy"))
                 .replace("{month}", DateUtil.localDateToDateStr(DateUtil.now(), "MMMM yyyy"))
-                .replace("{employeeGrossSalary}", DecimalUtil.strFormatted(employee.getGrossSalary()))
-                .replace("{employeeTotalEarnings}", DecimalUtil.strFormatted(employee.getGrossSalary()))
+                .replace("{employeeGrossSalary}", formatter.format(employee.getGrossSalary()))
+                .replace("{employeeTotalEarnings}", formatter.format(employee.getGrossSalary()))
                 .replace("{employeeGrossSalaryYearToDate}", NA)
                 .replace("{employeeTotalEarningsYearToDate}", NA)
-                .replace("{employeeNetSalary}", DecimalUtil.strFormatted(netSalary));
+                .replace("{employeeNetSalary}", formatter.format(netSalary));
     }
 
     /**
@@ -105,16 +119,16 @@ public class HtmlGenerator {
      * @return An html with all the employee deductions
      */
     private String addEmployeeDeductions(String template, DeductionsInfo deductions) {
-        return template.replace("{employeeSocialInsuranceForMonth}", DecimalUtil.strFormatted(deductions.getSocialInsuranceForMonth()))
-                .replace("{employeeSocialInsuranceYearToDate}", DecimalUtil.strFormatted(deductions.getSocialInsuranceYearToDate()))
-                .replace("{employeeCohesionFundForMonth}", DecimalUtil.strFormatted(deductions.getCohesionFundForMonth()))
-                .replace("{employeeCohesionFundYearToDate}", DecimalUtil.strFormatted(deductions.getCohesionFundYearToDate()))
-                .replace("{employeeIncomeTaxForMonth}", DecimalUtil.strFormatted(deductions.getIncomeTaxForMonth()))
-                .replace("{employeeIncomeTaxYearToDate}", DecimalUtil.strFormatted(deductions.getIncomeTaxYearToDate()))
-                .replace("{employeeNhsForMonth}", DecimalUtil.strFormatted(deductions.getNhsForMonth()))
-                .replace("{employeeNhsYearToDate}", DecimalUtil.strFormatted(deductions.getNhsYearToDate()))
-                .replace("{employeeTotalDeductions}", DecimalUtil.strFormatted(deductions.getTotalDeductionsForMonth()))
-                .replace("{employeeTotalDeductionsYearToDate}", DecimalUtil.strFormatted(deductions.getTotalDeductionsYearToDate()));
+        return template.replace("{employeeSocialInsuranceForMonth}", formatter.format(deductions.getSocialInsuranceForMonth()))
+                .replace("{employeeSocialInsuranceYearToDate}", formatter.format(deductions.getSocialInsuranceYearToDate()))
+                .replace("{employeeCohesionFundForMonth}", formatter.format(deductions.getCohesionFundForMonth()))
+                .replace("{employeeCohesionFundYearToDate}", formatter.format(deductions.getCohesionFundYearToDate()))
+                .replace("{employeeIncomeTaxForMonth}", formatter.format(deductions.getIncomeTaxForMonth()))
+                .replace("{employeeIncomeTaxYearToDate}", formatter.format(deductions.getIncomeTaxYearToDate()))
+                .replace("{employeeNhsForMonth}", formatter.format(deductions.getNhsForMonth()))
+                .replace("{employeeNhsYearToDate}", formatter.format(deductions.getNhsYearToDate()))
+                .replace("{employeeTotalDeductions}", formatter.format(deductions.getTotalDeductionsForMonth()))
+                .replace("{employeeTotalDeductionsYearToDate}", formatter.format(deductions.getTotalDeductionsYearToDate()));
     }
 
     /**
@@ -124,21 +138,22 @@ public class HtmlGenerator {
      */
     private String addEmployerDeductions(String template, Payslip payslip) {
         DeductionsInfo deductions = payslip.getEmployerDeductionsInfo();
-        double totalEmployerCost = payslip.getEmployee().getGrossSalary() + deductions.getTotalDeductionsForMonth();
+        BigDecimal totalEmployerCost = payslip.getEmployee().getGrossSalary()
+                .add(deductions.getTotalDeductionsForMonth());
 
-        return template.replace("{employerSocialInsuranceForMonth}", DecimalUtil.strFormatted(deductions.getSocialInsuranceForMonth()))
-                .replace("{employerSocialInsuranceYearToDate}", DecimalUtil.strFormatted(deductions.getSocialInsuranceYearToDate()))
-                .replace("{employerCohesionFundForMonth}", DecimalUtil.strFormatted(deductions.getCohesionFundForMonth()))
-                .replace("{employerCohesionFundYearToDate}", DecimalUtil.strFormatted(deductions.getCohesionFundYearToDate()))
-                .replace("{employerRedundancyFundForMonth}", DecimalUtil.strFormatted(deductions.getRedundancyFundForMonth()))
-                .replace("{employerRedundancyFundYearToDate}", DecimalUtil.strFormatted(deductions.getRedundancyFundYearToDate()))
-                .replace("{employerIndustrialTrainingForMonth}", DecimalUtil.strFormatted(deductions.getIndustrialTrainingForMonth()))
-                .replace("{employerIndustrialTrainingYearToDate}", DecimalUtil.strFormatted(deductions.getIndustrialTrainingYearToDate()))
-                .replace("{employerNhsForMonth}", DecimalUtil.strFormatted(deductions.getNhsForMonth()))
-                .replace("{employerNhsYearToDate}", DecimalUtil.strFormatted(deductions.getNhsYearToDate()))
-                .replace("{employerTotalContribution}", DecimalUtil.strFormatted(deductions.getTotalDeductionsForMonth()))
-                .replace("{employerTotalContributionYearToDate}", DecimalUtil.strFormatted(deductions.getTotalDeductionsYearToDate()))
-                .replace("{totalEmployerCost}", DecimalUtil.strFormatted(totalEmployerCost))
+        return template.replace("{employerSocialInsuranceForMonth}", formatter.format(deductions.getSocialInsuranceForMonth()))
+                .replace("{employerSocialInsuranceYearToDate}", formatter.format(deductions.getSocialInsuranceYearToDate()))
+                .replace("{employerCohesionFundForMonth}", formatter.format(deductions.getCohesionFundForMonth()))
+                .replace("{employerCohesionFundYearToDate}", formatter.format(deductions.getCohesionFundYearToDate()))
+                .replace("{employerRedundancyFundForMonth}", formatter.format(deductions.getRedundancyFundForMonth()))
+                .replace("{employerRedundancyFundYearToDate}", formatter.format(deductions.getRedundancyFundYearToDate()))
+                .replace("{employerIndustrialTrainingForMonth}", formatter.format(deductions.getIndustrialTrainingForMonth()))
+                .replace("{employerIndustrialTrainingYearToDate}", formatter.format(deductions.getIndustrialTrainingYearToDate()))
+                .replace("{employerNhsForMonth}", formatter.format(deductions.getNhsForMonth()))
+                .replace("{employerNhsYearToDate}", formatter.format(deductions.getNhsYearToDate()))
+                .replace("{employerTotalContribution}", formatter.format(deductions.getTotalDeductionsForMonth()))
+                .replace("{employerTotalContributionYearToDate}", formatter.format(deductions.getTotalDeductionsYearToDate()))
+                .replace("{totalEmployerCost}", formatter.format(totalEmployerCost))
                 .replace("{totalEmployerCostYearToDate}", NA);
     }
 
@@ -186,6 +201,6 @@ public class HtmlGenerator {
      * @return The name of the file to be created
      */
     private String getPayslipFilename(String employeeId) {
-        return employeeId + "_" + DateUtil.localDateToDateStr(DateUtil.now(), "MM-yyyy");
+        return employeeId + "_" + DateUtil.localDateToDateStr(DateUtil.now(), "yyyyMM");
     }
 }

@@ -5,16 +5,18 @@ import io.qbeat.models.DeductionsInfo;
 import io.qbeat.models.Employee;
 import io.qbeat.models.GeneralConfigProperty;
 import io.qbeat.models.PayslipHistory;
-import io.qbeat.utils.DecimalUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
 public class DeductionsCalculator {
 
     private static final Logger logger = LogManager.getLogger(DeductionsCalculator.class);
+    private static final int DECIMALS = 2;
 
     private final PersonType personType;
     private final Employee employee;
@@ -25,7 +27,6 @@ public class DeductionsCalculator {
 
     private final DeductionsInfo deductionsInfo = new DeductionsInfo();
     private List<PayslipHistory> payslipHistories;
-
     public DeductionsCalculator(PersonType personType, Employee employee, TaxCalculator taxCalculator,
                                 Map<String, GeneralConfigProperty> configProperties,
                                 PayslipHistoryDAO payslipHistoryDAO, int monthsToConsider) {
@@ -87,81 +88,94 @@ public class DeductionsCalculator {
     }
 
     private void calculateSocialInsurance() {
-        double socialInsuranceForMonth = calculateDeductionsForMonth(configProperties.get("SocialInsurance"));
-        double totalSocialInsurancePaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getSocialInsurance)
-                .sum();
-        double socialInsuranceYearToDate = DecimalUtil.round(totalSocialInsurancePaid + socialInsuranceForMonth);
+        BigDecimal socialInsuranceForMonth = calculateDeductionsForMonth(configProperties.get("SocialInsurance"));
+        BigDecimal totalSocialInsurancePaid = payslipHistories.stream()
+                .map(PayslipHistory::getSocialInsurance)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal socialInsuranceYearToDate = totalSocialInsurancePaid.add(socialInsuranceForMonth)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
 
         deductionsInfo.setSocialInsuranceForMonth(socialInsuranceForMonth);
         deductionsInfo.setSocialInsuranceYearToDate(socialInsuranceYearToDate);
     }
 
     private void calculateCohesionFund() {
-        double cohesionFundForMonth = calculateDeductionsForMonth(configProperties.get("CohesionFund"));
-        double totalCohesionFundPaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getCohesionFund)
-                .sum();
-        double cohesionFundYearToDate = DecimalUtil.round(totalCohesionFundPaid + cohesionFundForMonth);
+        BigDecimal cohesionFundForMonth = calculateDeductionsForMonth(configProperties.get("CohesionFund"));
+        BigDecimal totalCohesionFundPaid = payslipHistories.stream()
+                .map(PayslipHistory::getCohesionFund)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal cohesionFundYearToDate = totalCohesionFundPaid.add(cohesionFundForMonth)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
 
         deductionsInfo.setCohesionFundForMonth(cohesionFundForMonth);
         deductionsInfo.setCohesionFundYearToDate(cohesionFundYearToDate);
     }
 
     private void calculateRedundancyFund() {
-        double redundancyFundForMonth = calculateDeductionsForMonth(configProperties.get("RedundancyFund"));
-        double totalRedundancyFundPaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getRedundancyFund)
-                .sum();
-        double redundancyFundYearToDate = DecimalUtil.round(totalRedundancyFundPaid + redundancyFundForMonth);
+        BigDecimal redundancyFundForMonth = calculateDeductionsForMonth(configProperties.get("RedundancyFund"));
+        BigDecimal totalRedundancyFundPaid = payslipHistories.stream()
+                .map(PayslipHistory::getRedundancyFund)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal redundancyFundYearToDate = totalRedundancyFundPaid.add(redundancyFundForMonth)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
 
         deductionsInfo.setRedundancyFundForMonth(redundancyFundForMonth);
         deductionsInfo.setRedundancyFundYearToDate(redundancyFundYearToDate);
     }
 
     private void calculateIndustrialTraining() {
-        double industrialTrainingForMonth = calculateDeductionsForMonth(configProperties.get("IndustrialTraining"));
-        double totalIndustrialTrainingPaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getIndustrialTraining)
-                .sum();
-        double industrialTrainingYearToDate = DecimalUtil.round(totalIndustrialTrainingPaid + industrialTrainingForMonth);
+        BigDecimal industrialTrainingForMonth = calculateDeductionsForMonth(configProperties.get("IndustrialTraining"));
+        BigDecimal totalIndustrialTrainingPaid = payslipHistories.stream()
+                .map(PayslipHistory::getIndustrialTraining)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal industrialTrainingYearToDate = totalIndustrialTrainingPaid.add(industrialTrainingForMonth)
+                .setScale(DECIMALS, RoundingMode.HALF_UP);
 
         deductionsInfo.setIndustrialTrainingForMonth(industrialTrainingForMonth);
         deductionsInfo.setIndustrialTrainingYearToDate(industrialTrainingYearToDate);
     }
 
     private void calculateNHS() {
-        double nhsForMonth = calculateDeductionsForMonth(configProperties.get("NHS"));
-        double totalNhsPaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getNhs)
-                .sum();
-        double nhsYearToDate = DecimalUtil.round(totalNhsPaid + nhsForMonth);
+        BigDecimal nhsForMonth = calculateDeductionsForMonth(configProperties.get("NHS"));
+        BigDecimal totalNhsPaid = payslipHistories.stream()
+                .map(PayslipHistory::getNhs)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal nhsYearToDate = totalNhsPaid.add(nhsForMonth);
 
         deductionsInfo.setNhsForMonth(nhsForMonth);
         deductionsInfo.setNhsYearToDate(nhsYearToDate);
     }
 
     private void calculateTaxDeductions() {
-        double incomeTaxForMonth = taxCalculator.calculate(deductionsInfo.getMonthlyNonTaxableAmount());
-        double totalIncomeTaxPaid = payslipHistories.stream()
-                .mapToDouble(PayslipHistory::getIncomeTax)
-                .sum();
-        double incomeTaxYearToDate = DecimalUtil.round(totalIncomeTaxPaid + incomeTaxForMonth);
+        BigDecimal incomeTaxForMonth = taxCalculator.calculate(deductionsInfo.getMonthlyNonTaxableAmount());
+        BigDecimal totalIncomeTaxPaid = payslipHistories.stream()
+                .map(PayslipHistory::getIncomeTax)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal incomeTaxYearToDate = totalIncomeTaxPaid.add(incomeTaxForMonth);
 
         deductionsInfo.setIncomeTaxForMonth(incomeTaxForMonth);
         deductionsInfo.setIncomeTaxYearToDate(incomeTaxYearToDate);
     }
 
-    private double calculateDeductionsForMonth(GeneralConfigProperty property) {
+    private BigDecimal calculateDeductionsForMonth(GeneralConfigProperty property) {
         // TODO: aloizou 07/07/21 MaxContributions are not yet considered in calculations
 //        if (hasReachedMaxContributions(property)) {
 //            return DecimalUtil.round(property.getMaxContributions() * property.getContributionsPercentage() / 100.0/ monthsToConsider);
 //        }
 
-        return DecimalUtil.round(employee.getGrossSalary() * property.getContributionsPercentage() / 100.0);
+        return employee.getGrossSalary().multiply(property.getContributionsPercentage()).divide(BigDecimal.valueOf(100.0), DECIMALS, RoundingMode.HALF_UP);
     }
 
     private boolean hasReachedMaxContributions(GeneralConfigProperty property) {
-        return property.hasMaxContributions() && employee.getGrossSalary() * monthsToConsider > property.getMaxContributions();
+        BigDecimal contributions = employee.getGrossSalary().multiply(BigDecimal.valueOf(monthsToConsider));
+        return property.hasMaxContributions() &&  contributions.compareTo(property.getMaxContributions()) > 0;
     }
 }

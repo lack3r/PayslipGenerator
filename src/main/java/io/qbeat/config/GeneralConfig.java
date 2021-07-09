@@ -7,6 +7,7 @@ import io.qbeat.models.PersonType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -54,13 +55,13 @@ public class GeneralConfig {
         List<String> propertyInfo = CSVReader.splitLine(line);
 
         return new GeneralConfigProperty(propertyInfo.get(0), propertyInfo.get(1),
-                Double.parseDouble(propertyInfo.get(2)), parseMaxContributions(propertyInfo.get(3)));
+                new BigDecimal(propertyInfo.get(2)), parseMaxContributions(propertyInfo.get(3)));
     }
 
-    private double parseMaxContributions(String value) {
+    private BigDecimal parseMaxContributions(String value) {
         return EMPTY_STRING.equals(value)
-                ? 0.0
-                : Double.parseDouble(value);
+                ? BigDecimal.ZERO
+                : new BigDecimal(value);
     }
 
     private void addProperty(GeneralConfigProperty property) {

@@ -3,6 +3,7 @@ package io.qbeat.models;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +14,12 @@ public class PayslipHistory {
     private String employeeId;
     private PersonType personType;
     private LocalDate date;
-    private double socialInsurance;
-    private double cohesionFund;
-    private double incomeTax;
-    private double redundancyFund;
-    private double industrialTraining;
-    private double nhs;
+    private BigDecimal socialInsurance;
+    private BigDecimal cohesionFund;
+    private BigDecimal incomeTax;
+    private BigDecimal redundancyFund;
+    private BigDecimal industrialTraining;
+    private BigDecimal nhs;
 
     /**
      * Gets a CSV line comma separated and returns a PayslipHistory object
@@ -33,12 +34,12 @@ public class PayslipHistory {
         payslipHistory.setEmployeeId(parts.get(0));
         payslipHistory.setPersonType(PersonType.fromValue(parts.get(1)));
         payslipHistory.setDate(DateUtil.dateStrToLocalDate(parts.get(2), "dd/MM/yyyy"));
-        payslipHistory.setSocialInsurance(Double.parseDouble(parts.get(3)));
-        payslipHistory.setCohesionFund(Double.parseDouble(parts.get(4)));
-        payslipHistory.setIncomeTax(Double.parseDouble(parts.get(5)));
-        payslipHistory.setRedundancyFund(Double.parseDouble(parts.get(6)));
-        payslipHistory.setIndustrialTraining(Double.parseDouble(parts.get(7)));
-        payslipHistory.setNhs(Double.parseDouble(parts.get(8)));
+        payslipHistory.setSocialInsurance(new BigDecimal(parts.get(3)));
+        payslipHistory.setCohesionFund(new BigDecimal(parts.get(4)));
+        payslipHistory.setIncomeTax(new BigDecimal(parts.get(5)));
+        payslipHistory.setRedundancyFund(new BigDecimal(parts.get(6)));
+        payslipHistory.setIndustrialTraining(new BigDecimal(parts.get(7)));
+        payslipHistory.setNhs(new BigDecimal(parts.get(8)));
 
         return payslipHistory;
     }
@@ -91,51 +92,51 @@ public class PayslipHistory {
         this.date = date;
     }
 
-    public double getSocialInsurance() {
+    public BigDecimal getSocialInsurance() {
         return socialInsurance;
     }
 
-    public void setSocialInsurance(double socialInsurance) {
+    public void setSocialInsurance(BigDecimal socialInsurance) {
         this.socialInsurance = socialInsurance;
     }
 
-    public double getCohesionFund() {
+    public BigDecimal getCohesionFund() {
         return cohesionFund;
     }
 
-    public void setCohesionFund(double cohesionFund) {
+    public void setCohesionFund(BigDecimal cohesionFund) {
         this.cohesionFund = cohesionFund;
     }
 
-    public double getIncomeTax() {
+    public BigDecimal getIncomeTax() {
         return incomeTax;
     }
 
-    public void setIncomeTax(double incomeTax) {
+    public void setIncomeTax(BigDecimal incomeTax) {
         this.incomeTax = incomeTax;
     }
 
-    public double getRedundancyFund() {
+    public BigDecimal getRedundancyFund() {
         return redundancyFund;
     }
 
-    public void setRedundancyFund(double redundancyFund) {
+    public void setRedundancyFund(BigDecimal redundancyFund) {
         this.redundancyFund = redundancyFund;
     }
 
-    public double getIndustrialTraining() {
+    public BigDecimal getIndustrialTraining() {
         return industrialTraining;
     }
 
-    public void setIndustrialTraining(double industrialTraining) {
+    public void setIndustrialTraining(BigDecimal industrialTraining) {
         this.industrialTraining = industrialTraining;
     }
 
-    public double getNhs() {
+    public BigDecimal getNhs() {
         return nhs;
     }
 
-    public void setNhs(double nhs) {
+    public void setNhs(BigDecimal nhs) {
         this.nhs = nhs;
     }
 
