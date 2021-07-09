@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class DeductionsInfo {
+public class Deductions {
 
     private static final int DECIMALS = 2;
 
@@ -79,7 +79,7 @@ public class DeductionsInfo {
 
     @Override
     public String toString() {
-        return "DeductionsInfo{" +
+        return "Deductions{" +
                 "socialInsuranceForMonth=" + socialInsuranceForMonth +
                 ", socialInsuranceYearToDate=" + socialInsuranceYearToDate +
                 ", cohesionFundForMonth=" + cohesionFundForMonth +

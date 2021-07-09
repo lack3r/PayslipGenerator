@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 public class Payslip {
     private final Company company;
     private final Employee employee;
-    private final DeductionsInfo employeeDeductionsInfo;
-    private final DeductionsInfo employerDeductionsInfo;
+    private final Deductions employeeDeductions;
+    private final Deductions employerDeductions;
 
-    public Payslip(Company company, Employee employee, DeductionsInfo employeeDeductionsInfo, DeductionsInfo employerDeductionsInfo) {
+    public Payslip(Company company, Employee employee, Deductions employeeDeductions, Deductions employerDeductions) {
         this.company = company;
         this.employee = employee;
-        this.employeeDeductionsInfo = employeeDeductionsInfo;
-        this.employerDeductionsInfo = employerDeductionsInfo;
+        this.employeeDeductions = employeeDeductions;
+        this.employerDeductions = employerDeductions;
     }
 
     public Company getCompanyInfo() {
@@ -27,12 +27,12 @@ public class Payslip {
         return employee;
     }
 
-    public DeductionsInfo getEmployeeDeductionsInfo() {
-        return employeeDeductionsInfo;
+    public Deductions getEmployeeDeductionsInfo() {
+        return employeeDeductions;
     }
 
-    public DeductionsInfo getEmployerDeductionsInfo() {
-        return employerDeductionsInfo;
+    public Deductions getEmployerDeductionsInfo() {
+        return employerDeductions;
     }
 
     /**
@@ -42,7 +42,7 @@ public class Payslip {
      * @return A CSV line comma separated
      */
     public String toPayslipHistoryCSVLine(PersonType personType) {
-        DeductionsInfo info = personType == PersonType.EMPLOYEE ? employeeDeductionsInfo : employerDeductionsInfo;
+        Deductions info = personType == PersonType.EMPLOYEE ? employeeDeductions : employerDeductions;
         List<String> data = new ArrayList<>();
 
         data.add(employee.getId());
@@ -65,8 +65,8 @@ public class Payslip {
         return "Payslip{" +
                 "company=" + company +
                 ", employee=" + employee +
-                ", employeeDeductionsInfo=" + employeeDeductionsInfo +
-                ", employerDeductionsInfo=" + employerDeductionsInfo +
+                ", employeeDeductions=" + employeeDeductions +
+                ", employerDeductions=" + employerDeductions +
                 '}';
     }
 }

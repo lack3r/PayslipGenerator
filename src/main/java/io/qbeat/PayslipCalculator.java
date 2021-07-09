@@ -4,7 +4,7 @@ import io.qbeat.config.GeneralConfig;
 import io.qbeat.models.PersonType;
 import io.qbeat.config.TaxConfig;
 import io.qbeat.models.Company;
-import io.qbeat.models.DeductionsInfo;
+import io.qbeat.models.Deductions;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
 import org.apache.logging.log4j.LogManager;
@@ -65,9 +65,9 @@ public class PayslipCalculator {
         DeductionsCalculator employerDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYER, employee,
                 taxCalculator, generalConfig.getProperties(PersonType.EMPLOYER), payslipHistoryDAO, MONTHS_TO_CONSIDER);
 
-        DeductionsInfo employeeDeductionsInfo = employeeDeductionsCalculator.calculate();
-        DeductionsInfo employerDeductionsInfo = employerDeductionsCalculator.calculate();
+        Deductions employeeDeductions = employeeDeductionsCalculator.calculate();
+        Deductions employerDeductions = employerDeductionsCalculator.calculate();
 
-        return new Payslip(company, employee, employeeDeductionsInfo, employerDeductionsInfo);
+        return new Payslip(company, employee, employeeDeductions, employerDeductions);
     }
 }

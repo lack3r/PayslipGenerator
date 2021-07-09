@@ -1,7 +1,7 @@
 package io.qbeat;
 
 import io.qbeat.models.Company;
-import io.qbeat.models.DeductionsInfo;
+import io.qbeat.models.Deductions;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
 import io.qbeat.utils.DateUtil;
@@ -115,10 +115,10 @@ public class HtmlGenerator {
 
     /**
      * @param template   An html template
-     * @param deductions A DeductionsInfo object of employee
+     * @param deductions A Deductions object of employee
      * @return An html with all the employee deductions
      */
-    private String addEmployeeDeductions(String template, DeductionsInfo deductions) {
+    private String addEmployeeDeductions(String template, Deductions deductions) {
         return template.replace("{employeeSocialInsuranceForMonth}", formatter.format(deductions.getSocialInsuranceForMonth()))
                 .replace("{employeeSocialInsuranceYearToDate}", formatter.format(deductions.getSocialInsuranceYearToDate()))
                 .replace("{employeeCohesionFundForMonth}", formatter.format(deductions.getCohesionFundForMonth()))
@@ -137,7 +137,7 @@ public class HtmlGenerator {
      * @return An html with all the employer deductions
      */
     private String addEmployerDeductions(String template, Payslip payslip) {
-        DeductionsInfo deductions = payslip.getEmployerDeductionsInfo();
+        Deductions deductions = payslip.getEmployerDeductionsInfo();
         BigDecimal totalEmployerCost = payslip.getEmployee().getGrossSalary()
                 .add(deductions.getTotalDeductionsForMonth());
 

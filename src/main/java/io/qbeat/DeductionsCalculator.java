@@ -1,10 +1,7 @@
 package io.qbeat;
 
-import io.qbeat.models.PersonType;
-import io.qbeat.models.DeductionsInfo;
-import io.qbeat.models.Employee;
-import io.qbeat.models.GeneralConfigProperty;
-import io.qbeat.models.PayslipHistory;
+import io.qbeat.models.*;
+import io.qbeat.models.Deductions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +22,7 @@ public class DeductionsCalculator {
     private final PayslipHistoryDAO payslipHistoryDAO;
     private final int monthsToConsider;
 
-    private final DeductionsInfo deductionsInfo = new DeductionsInfo();
+    private final Deductions deductions = new Deductions();
     private List<PayslipHistory> payslipHistories;
     public DeductionsCalculator(PersonType personType, Employee employee, TaxCalculator taxCalculator,
                                 Map<String, GeneralConfigProperty> configProperties,
@@ -39,9 +36,9 @@ public class DeductionsCalculator {
     }
 
     /**
-     * @return The DeductionsInfo based on the person type
+     * @return The Deductions based on the person type
      */
-    public DeductionsInfo calculate() {
+    public Deductions calculate() {
         payslipHistories = payslipHistoryDAO.findByEmployeeIdAndPersonType(employee.getId(), personType);
 
         switch (personType) {
@@ -55,11 +52,11 @@ public class DeductionsCalculator {
                 logger.error("Unable to calculate deductions. Unknown person type: " + personType);
         }
 
-        return deductionsInfo;
+        return deductions;
     }
 
     /**
-     * Calculates the DeductionsInfo of the employee
+     * Calculates the Deductions of the employee
      */
     private void calculateForEmployee() {
         calculateForAnyone();
@@ -70,7 +67,7 @@ public class DeductionsCalculator {
     }
 
     /**
-     * Calculates the DeductionsInfo of the employer
+     * Calculates the Deductions of the employer
      */
     private void calculateForEmployer() {
         calculateForAnyone();
@@ -79,7 +76,7 @@ public class DeductionsCalculator {
     }
 
     /**
-     * Common DeductionsInfo calculations
+     * Common Deductions calculations
      */
     private void calculateForAnyone() {
         calculateSocialInsurance();
@@ -96,8 +93,8 @@ public class DeductionsCalculator {
         BigDecimal socialInsuranceYearToDate = totalSocialInsurancePaid.add(socialInsuranceForMonth)
                 .setScale(DECIMALS, RoundingMode.HALF_UP);
 
-        deductionsInfo.setSocialInsuranceForMonth(socialInsuranceForMonth);
-        deductionsInfo.setSocialInsuranceYearToDate(socialInsuranceYearToDate);
+        deductions.setSocialInsuranceForMonth(socialInsuranceForMonth);
+        deductions.setSocialInsuranceYearToDate(socialInsuranceYearToDate);
     }
 
     private void calculateCohesionFund() {
@@ -109,8 +106,8 @@ public class DeductionsCalculator {
         BigDecimal cohesionFundYearToDate = totalCohesionFundPaid.add(cohesionFundForMonth)
                 .setScale(DECIMALS, RoundingMode.HALF_UP);
 
-        deductionsInfo.setCohesionFundForMonth(cohesionFundForMonth);
-        deductionsInfo.setCohesionFundYearToDate(cohesionFundYearToDate);
+        deductions.setCohesionFundForMonth(cohesionFundForMonth);
+        deductions.setCohesionFundYearToDate(cohesionFundYearToDate);
     }
 
     private void calculateRedundancyFund() {
@@ -122,8 +119,8 @@ public class DeductionsCalculator {
         BigDecimal redundancyFundYearToDate = totalRedundancyFundPaid.add(redundancyFundForMonth)
                 .setScale(DECIMALS, RoundingMode.HALF_UP);
 
-        deductionsInfo.setRedundancyFundForMonth(redundancyFundForMonth);
-        deductionsInfo.setRedundancyFundYearToDate(redundancyFundYearToDate);
+        deductions.setRedundancyFundForMonth(redundancyFundForMonth);
+        deductions.setRedundancyFundYearToDate(redundancyFundYearToDate);
     }
 
     private void calculateIndustrialTraining() {
@@ -136,8 +133,8 @@ public class DeductionsCalculator {
         BigDecimal industrialTrainingYearToDate = totalIndustrialTrainingPaid.add(industrialTrainingForMonth)
                 .setScale(DECIMALS, RoundingMode.HALF_UP);
 
-        deductionsInfo.setIndustrialTrainingForMonth(industrialTrainingForMonth);
-        deductionsInfo.setIndustrialTrainingYearToDate(industrialTrainingYearToDate);
+        deductions.setIndustrialTrainingForMonth(industrialTrainingForMonth);
+        deductions.setIndustrialTrainingYearToDate(industrialTrainingYearToDate);
     }
 
     private void calculateNHS() {
@@ -149,20 +146,20 @@ public class DeductionsCalculator {
 
         BigDecimal nhsYearToDate = totalNhsPaid.add(nhsForMonth);
 
-        deductionsInfo.setNhsForMonth(nhsForMonth);
-        deductionsInfo.setNhsYearToDate(nhsYearToDate);
+        deductions.setNhsForMonth(nhsForMonth);
+        deductions.setNhsYearToDate(nhsYearToDate);
     }
 
     private void calculateTaxDeductions() {
-        BigDecimal incomeTaxForMonth = taxCalculator.calculate(deductionsInfo.getMonthlyNonTaxableAmount());
+        BigDecimal incomeTaxForMonth = taxCalculator.calculate(deductions.getMonthlyNonTaxableAmount());
         BigDecimal totalIncomeTaxPaid = payslipHistories.stream()
                 .map(PayslipHistory::getIncomeTax)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
         BigDecimal incomeTaxYearToDate = totalIncomeTaxPaid.add(incomeTaxForMonth);
 
-        deductionsInfo.setIncomeTaxForMonth(incomeTaxForMonth);
-        deductionsInfo.setIncomeTaxYearToDate(incomeTaxYearToDate);
+        deductions.setIncomeTaxForMonth(incomeTaxForMonth);
+        deductions.setIncomeTaxYearToDate(incomeTaxYearToDate);
     }
 
     private BigDecimal calculateDeductionsForMonth(GeneralConfigProperty property) {
