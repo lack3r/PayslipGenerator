@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
     <title>Payslip</title>
@@ -67,119 +68,119 @@
         }
     </style>
 </head>
-<html lang="en">
 
 <body>
-    <div class="container">
-        <div class="wrapper">
-            <h2 class="title">{companyName}</h2>
-            <div class="companyInfo">{companyAddress}</div>
-            <div class="companyInfo companyInfoBottom">Tel.: {companyPhone}</div>
+<div class="container">
+    <div class="wrapper">
+        <h2 class="title">{companyName}</h2>
+        <div class="companyInfo">{companyAddress}</div>
+        <div class="companyInfo companyInfoBottom">Tel.: {companyPhone}</div>
 
-            <table>
-                <tr>
-                    <th>EMPL. CODE</th>
-                    <th colspan="4">EMPLOYEE'S NAME</th>
-                    <th>ID. CARD No.</th>
-                    <th>SOC. INS. No.</th>
-                    <th>DATE</th>
-                    <th>MONTH</th>
-                </tr>
-                <tr>
-                    <td>-</td>
-                    <td colspan="4">{employeeName}</td>
-                    <td>{employeeId}</td>
-                    <td>{employeeSocialInsuranceId}</td>
-                    <td>{date}</td>
-                    <td>{month}</td>
-                </tr>
-                <tr class="fontSize14">
-                    <th>EARNINGS</th>
-                    <th>FOR MONTH</th>
-                    <th>YEAR TO DATE</th>
-                    <th>EMPLOYEE DEDUCTIONS</th>
-                    <th>FOR MONTH</th>
-                    <th>YEAR TO DATE</th>
-                    <th>EMPLOYEER'S CONTRIBUTION</th>
-                    <th>FOR MONTH</th>
-                    <th>YEAR TO DATE</th>
-                </tr>
-                <tr class="verticalBorder">
-                    <td class="floatLeft">Gross Salary</td>
-                    <td class="floatRight">{employeeGrossSalary}</td>
-                    <td class="floatRight">{employeeGrossSalaryYearToDate}</td>
-                    <td class="floatLeft">Social Insurance</td>
-                    <td class="floatRight">{employeeSocialInsuranceForMonth}</td>
-                    <td class="floatRight">{employeeSocialInsuranceYearToDate}</td>
-                    <td class="floatLeft">Social Insurance</td>
-                    <td class="floatRight">{employerSocialInsuranceForMonth}</td>
-                    <td class="floatRight">{employerSocialInsuranceYearToDate}</td>
-                </tr>
-                <tr class="verticalBorder">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="floatLeft">Cohesion Fund</td>
-                    <td class="floatRight">{employeeCohesionFundForMonth}</td>
-                    <td class="floatRight">{employeeCohesionFundYearToDate}</td>
-                    <td class="floatLeft">Cohesion Fund</td>
-                    <td class="floatRight">{employerCohesionFundForMonth}</td>
-                    <td class="floatRight">{employerCohesionFundYearToDate}</td>
-                </tr>
-                <tr class="verticalBorder">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="floatLeft">Income Tax</td>
-                    <td class="floatRight">{employeeIncomeTaxForMonth}</td>
-                    <td class="floatRight">{employeeIncomeTaxYearToDate}</td>
-                    <td class="floatLeft">Redundancy Fund</td>
-                    <td class="floatRight">{employerRedundancyFundForMonth}</td>
-                    <td class="floatRight">{employerRedundancyFundYearToDate}</td>
-                </tr>
-                <tr class="verticalBorder">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="floatLeft">Industrial Training</td>
-                    <td class="floatRight">{employerIndustrialTrainingForMonth}</td>
-                    <td class="floatRight">{employerIndustrialTrainingYearToDate}</td>
-                </tr>
-                <tr class="verticalBorder">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="floatLeft">NHS</td>
-                    <td class="floatRight">{employeeNhsForMonth}</td>
-                    <td class="floatRight">{employeeNhsYearToDate}</td>
-                    <td class="floatLeft">NHS</td>
-                    <td class="floatRight">{employerNhsForMonth}</td>
-                    <td class="floatRight">{employerNhsYearToDate}</td>
-                </tr>
-                <tr class="fontSize14">
-                    <th>TOTAL EARNINGS</th>
-                    <td>{employeeTotalEarnings}</td>
-                    <td>{employeeTotalEarningsYearToDate}</td>
-                    <th>TOTAL DEDUCTIONS</th>
-                    <td>{employeeTotalDeductions}</td>
-                    <td>{employeeTotalDeductionsYearToDate}</td>
-                    <th>TOTAL CONTRIBUTION</th>
-                    <td>{employerTotalContribution}</td>
-                    <td>{employerTotalContributionYearToDate}</td>
-                </tr>
-                <tr class="fontSize14">
-                    <th colspan="5" class="floatRight netSalary">NET SALARY</th>
-                    <th style="border: 3px solid black;">{employeeNetSalary}</th>
-                    <th>TOTAL EMPLOYER COST</th>
-                    <th>{totalEmployerCost}</th>
-                    <th>{totalEmployerCostYearToDate}</th>
-                </tr>
-            </table>
-        </div>
+        <table>
+            <caption>Payslip Table</caption>
+            <tr>
+                <th>EMPL. CODE</th>
+                <th colspan="4">EMPLOYEE'S NAME</th>
+                <th>ID. CARD No.</th>
+                <th>SOC. INS. No.</th>
+                <th>DATE</th>
+                <th>MONTH</th>
+            </tr>
+            <tr>
+                <td>-</td>
+                <td colspan="4">{employeeName}</td>
+                <td>{employeeId}</td>
+                <td>{employeeSocialInsuranceId}</td>
+                <td>{date}</td>
+                <td>{month}</td>
+            </tr>
+            <tr class="fontSize14">
+                <th>EARNINGS</th>
+                <th>FOR MONTH</th>
+                <th>YEAR TO DATE</th>
+                <th>EMPLOYEE DEDUCTIONS</th>
+                <th>FOR MONTH</th>
+                <th>YEAR TO DATE</th>
+                <th>EMPLOYEER'S CONTRIBUTION</th>
+                <th>FOR MONTH</th>
+                <th>YEAR TO DATE</th>
+            </tr>
+            <tr class="verticalBorder">
+                <td class="floatLeft">Gross Salary</td>
+                <td class="floatRight">{employeeGrossSalary}</td>
+                <td class="floatRight">{employeeGrossSalaryYearToDate}</td>
+                <td class="floatLeft">Social Insurance</td>
+                <td class="floatRight">{employeeSocialInsuranceForMonth}</td>
+                <td class="floatRight">{employeeSocialInsuranceYearToDate}</td>
+                <td class="floatLeft">Social Insurance</td>
+                <td class="floatRight">{employerSocialInsuranceForMonth}</td>
+                <td class="floatRight">{employerSocialInsuranceYearToDate}</td>
+            </tr>
+            <tr class="verticalBorder">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="floatLeft">Cohesion Fund</td>
+                <td class="floatRight">{employeeCohesionFundForMonth}</td>
+                <td class="floatRight">{employeeCohesionFundYearToDate}</td>
+                <td class="floatLeft">Cohesion Fund</td>
+                <td class="floatRight">{employerCohesionFundForMonth}</td>
+                <td class="floatRight">{employerCohesionFundYearToDate}</td>
+            </tr>
+            <tr class="verticalBorder">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="floatLeft">Income Tax</td>
+                <td class="floatRight">{employeeIncomeTaxForMonth}</td>
+                <td class="floatRight">{employeeIncomeTaxYearToDate}</td>
+                <td class="floatLeft">Redundancy Fund</td>
+                <td class="floatRight">{employerRedundancyFundForMonth}</td>
+                <td class="floatRight">{employerRedundancyFundYearToDate}</td>
+            </tr>
+            <tr class="verticalBorder">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="floatLeft">Industrial Training</td>
+                <td class="floatRight">{employerIndustrialTrainingForMonth}</td>
+                <td class="floatRight">{employerIndustrialTrainingYearToDate}</td>
+            </tr>
+            <tr class="verticalBorder">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="floatLeft">NHS</td>
+                <td class="floatRight">{employeeNhsForMonth}</td>
+                <td class="floatRight">{employeeNhsYearToDate}</td>
+                <td class="floatLeft">NHS</td>
+                <td class="floatRight">{employerNhsForMonth}</td>
+                <td class="floatRight">{employerNhsYearToDate}</td>
+            </tr>
+            <tr class="fontSize14">
+                <th>TOTAL EARNINGS</th>
+                <td>{employeeTotalEarnings}</td>
+                <td>{employeeTotalEarningsYearToDate}</td>
+                <th>TOTAL DEDUCTIONS</th>
+                <td>{employeeTotalDeductions}</td>
+                <td>{employeeTotalDeductionsYearToDate}</td>
+                <th>TOTAL CONTRIBUTION</th>
+                <td>{employerTotalContribution}</td>
+                <td>{employerTotalContributionYearToDate}</td>
+            </tr>
+            <tr class="fontSize14">
+                <th colspan="5" class="floatRight netSalary">NET SALARY</th>
+                <th style="border: 3px solid black;">{employeeNetSalary}</th>
+                <th>TOTAL EMPLOYER COST</th>
+                <th>{totalEmployerCost}</th>
+                <th>{totalEmployerCostYearToDate}</th>
+            </tr>
+        </table>
     </div>
+</div>
 </body>
 
 </html>
