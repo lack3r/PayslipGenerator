@@ -42,7 +42,7 @@ public class GeneralConfig {
         }
 
         isLoaded = true;
-        logger.info(getClass().getSimpleName() + " successfully loaded");
+        logger.info("{} successfully loaded", getClass().getSimpleName());
     }
 
     public Map<String, GeneralConfigProperty> getProperties(PersonType personType) {

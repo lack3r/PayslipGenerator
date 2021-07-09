@@ -78,9 +78,9 @@ public class PayslipHistoryDAO {
 
         try {
             fileWriter.write(filename, entriesToInsert, true);
-            logger.debug("Payslip successfully inserted: " + payslip);
+            logger.debug("Payslip successfully inserted: {}", payslip);
         } catch (Exception e) {
-            logger.error("Failed to insert payslip: " + payslip, e);
+            logger.error("Failed to insert payslip: {}", payslip, e);
         }
     }
 
@@ -98,9 +98,9 @@ public class PayslipHistoryDAO {
 
         try {
             fileWriter.write(filename, entriesToInsert, false);
-            logger.info("Payslip successfully updated: " + newPayslip);
+            logger.info("Payslip successfully updated: {}", newPayslip);
         } catch (Exception e) {
-            logger.error("Failed to update old payslip entries: " + oldPayslipEntries + "\n with new payslip: " + newPayslip, e);
+            logger.error("Failed to update old payslip entries: {} \n with new payslip: {}", oldPayslipEntries, newPayslip, e);
         }
     }
 

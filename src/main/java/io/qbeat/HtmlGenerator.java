@@ -166,7 +166,7 @@ public class HtmlGenerator {
         String outputDirPath = System.getProperty("user.dir") + File.separator + outputDirectory;
         File outputDir = new File(outputDirPath);
         if (!outputDir.exists()) {
-            logger.info("Creating directory: " + outputDirPath);
+            logger.info("Creating directory: {}", outputDirPath);
             boolean wasDirectoryWithParentsCreated = outputDir.mkdirs();
 
             if (!wasDirectoryWithParentsCreated) {

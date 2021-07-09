@@ -37,11 +37,11 @@ public class PayslipCalculator {
     public List<Payslip> calculate() {
         List<Payslip> payslips = new ArrayList<>();
         try {
-            logger.debug("Total of " + company.getEmployees().size() + " payslip(s) info to be calculated");
+            logger.debug("Total of {} payslip(s) info to be calculated", company.getEmployees().size());
             for (Employee employee : company.getEmployees()) {
                 Payslip employeePayslip = calculateEmployeePayslip(employee);
 
-                logger.info("Payslip info of employee with Id " + employee.getId() + " was successfully calculated");
+                logger.info("Payslip info of employee with Id {} was successfully calculated", employee.getId());
                 payslips.add(employeePayslip);
             }
         } catch (Exception e) {

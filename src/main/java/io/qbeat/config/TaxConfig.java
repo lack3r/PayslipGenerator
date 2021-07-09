@@ -37,7 +37,7 @@ public class TaxConfig {
         }
 
         isLoaded = true;
-        logger.info(getClass().getSimpleName() + " successfully loaded");
+        logger.info( "{} successfully loaded", getClass().getSimpleName());
     }
 
     public List<TaxConfigProperty> getProperties() {

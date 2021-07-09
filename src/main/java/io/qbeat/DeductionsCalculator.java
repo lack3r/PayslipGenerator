@@ -49,7 +49,7 @@ public class DeductionsCalculator {
                 calculateForEmployer();
                 break;
             default:
-                logger.error("Unable to calculate deductions. Unknown person type: " + personType);
+                logger.error("Unable to calculate deductions. Unknown person type: {}", personType);
         }
 
         return deductions;
