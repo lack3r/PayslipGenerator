@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.Currency;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,8 +43,6 @@ public class HtmlGenerator {
         formatter.setMaximumFractionDigits(2);
         formatter.setMinimumFractionDigits(2);
         formatter.setGroupingUsed(false);
-        Currency currency = Currency.getInstance("EUR");
-        formatter.setCurrency(currency);
     }
 
     /**
