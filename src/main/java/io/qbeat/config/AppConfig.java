@@ -34,17 +34,21 @@ public class AppConfig {
         }
 
         String rootPath = "";
-
+        FileInputStream fileInputStream = null;
         try {
             rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
             String appConfigPath = rootPath + "app.properties";
 
             Properties appProps = new Properties();
-            appProps.load(new FileInputStream(appConfigPath));
+            fileInputStream = new FileInputStream(appConfigPath);
 
             readProperties(appProps);
         } catch (IOException e) {
             throw new IOException("Could not read Configuration File: " + rootPath, e);
+        } finally {
+            if (fileInputStream != null){
+                fileInputStream.close();
+            }
         }
 
         isLoaded = true;
