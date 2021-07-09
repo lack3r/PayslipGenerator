@@ -6,9 +6,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
 
-public class AppConfig {
+class AppConfig {
 
     private static final Logger logger = LogManager.getLogger(AppConfig.class);
 
@@ -27,32 +28,30 @@ public class AppConfig {
 
     private boolean isLoaded = false;
 
-    public void load() throws IOException {
+    void load() throws IOException {
 
         if (isLoaded) {
             return;
         }
 
-        String rootPath = "";
-        FileInputStream fileInputStream = null;
-        try {
-            rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-            String appConfigPath = rootPath + "app.properties";
+        URL resource = Thread.currentThread().getContextClassLoader().getResource("");
+        if (resource == null) {
+            throw new IOException("Resource could not be found while reading properties file ");
+        }
 
+        String rootPath = resource.getPath();
+        String appConfigPath = rootPath + "app.properties";
+
+        try (FileInputStream fileInputStream = new FileInputStream(appConfigPath)) {
             Properties appProps = new Properties();
-            fileInputStream = new FileInputStream(appConfigPath);
-
+            appProps.load(fileInputStream);
             readProperties(appProps);
         } catch (IOException e) {
             throw new IOException("Could not read Configuration File: " + rootPath, e);
-        } finally {
-            if (fileInputStream != null){
-                fileInputStream.close();
-            }
         }
 
         isLoaded = true;
-        logger.info(getClass().getSimpleName() + " successfully loaded");
+        logger.info("{} successfully loaded", getClass().getSimpleName());
     }
 
     private void readProperties(Properties appProps) {
