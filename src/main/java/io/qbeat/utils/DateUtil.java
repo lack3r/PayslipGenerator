@@ -5,6 +5,11 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
+
+    private DateUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static LocalDate now() {
         return LocalDate.now();
     }
