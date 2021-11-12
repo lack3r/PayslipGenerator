@@ -1,24 +1,41 @@
 package io.qbeat.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.readers.FileReader;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Company {
+import static java.util.stream.Collectors.toCollection;
+
+public class Company implements Serializable {
+
+    private static final Logger logger = LogManager.getLogger(Company.class);
+
+    @JsonProperty("name")
     private final String name;
+    @JsonProperty("address")
     private final String address;
+    @JsonProperty("phone")
     private final String phone;
-    private final List<Employee> employees;
+    @JsonProperty("employees")
+    private final ArrayList<Employee> employees;
 
-    public Company(String name, String address, String phone, List<Employee> employees) {
+    @JsonCreator
+    public Company(@JsonProperty("name") String name, @JsonProperty("address") String address, @JsonProperty("phone") String phone, @JsonProperty("employees") List<Employee> employees) {
         this.name = name;
         this.address = address;
         this.phone = phone;
-        this.employees = employees;
+        this.employees = new ArrayList<>(employees);
     }
 
     public static Company loadFromCSVFile(FileReader fileReader, String filename) throws IOException {
@@ -32,11 +49,11 @@ public class Company {
 
         List<String> companyInfo = CSVReader.splitLine(fileLines.remove(0));
 
-        List<Employee> companyEmployees = fileLines.stream()
+        ArrayList<Employee> companyEmployees = fileLines.stream()
                 .map(String::trim)
                 .filter(line -> !line.equals(""))
                 .map(Employee::fromCSVLine)
-                .collect(Collectors.toList());
+                .collect(toCollection(ArrayList::new));
 
         return new Company(
                 companyInfo.get(0),
@@ -44,6 +61,25 @@ public class Company {
                 companyInfo.get(2),
                 companyEmployees
         );
+    }
+
+    public void exportToJSON(String filename, ObjectMapper mapper) {
+        try {
+            mapper.writeValue(new File(filename), this);
+        } catch (IOException e) {
+            logger.error("Could not export company to JSON ", e);
+        }
+    }
+
+    public static Company importFromJSON(String filename, ObjectMapper mapper) throws IOException {
+        try {
+            Company company = mapper.readValue(new File(filename), Company.class);
+            logger.info("Successfully read a {} object", Company.class);
+            return company;
+        } catch (IOException e) {
+            logger.error("Could not import company from JSON ", e);
+            throw e;
+        }
     }
 
     public String getName() {

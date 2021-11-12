@@ -1,6 +1,9 @@
 package io.qbeat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.qbeat.config.Config;
+import io.qbeat.exceptions.ConfigurationReadException;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.writers.CSVWriter;
 import io.qbeat.file.readers.FileReader;
@@ -10,6 +13,7 @@ import io.qbeat.models.Payslip;
 import java.io.IOException;
 import java.util.List;
 
+import io.qbeat.utils.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,8 +28,14 @@ public class Main {
 
             Config config = loadConfigurationFiles();
 
+            ObjectMapper mapper = getAndConfigureObjectMapper();
+
             FileReader csvReader = CSVReader.getInstance();
-            Company company = Company.loadFromCSVFile(csvReader, config.getCompanyInfoFilename());
+            String companyWithEmployeesFilename = new FileUtils().getFullFilePath(config.getCompanyWithEmployeesFilename());
+
+            Company company = Company.importFromJSON(companyWithEmployeesFilename, mapper);
+            logger.info(company);
+
             final PayslipHistoryDAO payslipHistoryDAO = new PayslipHistoryDAO(csvReader, new CSVWriter(), config.getPayslipHistoryFilename());
 
             List<Payslip> payslipsToBeGenerated = calculatePayslipsToBeGenerated(config, company, payslipHistoryDAO);
@@ -39,12 +49,19 @@ public class Main {
         logger.info("Payslip Generator Finished");
     }
 
-    private static Config loadConfigurationFiles() throws Exception {
+    private static ObjectMapper getAndConfigureObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        return mapper;
+    }
+
+    private static Config loadConfigurationFiles() throws ConfigurationReadException {
         Config config = new Config();
         try {
             config.load();
         } catch (IOException e) {
-            throw new Exception("Failed to load configuration files ", e);
+            throw new ConfigurationReadException("Failed to load configuration files ", e);
         }
         return config;
     }

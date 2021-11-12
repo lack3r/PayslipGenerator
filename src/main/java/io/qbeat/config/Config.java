@@ -35,6 +35,10 @@ public class Config {
         return appConfig.getPayslipHistoryFilename();
     }
 
+    public String getCompanyWithEmployeesFilename() {
+        return appConfig.getCompanyWithEmployeesFilename();
+    }
+
     public String getPayslipsOutputDirectory() {
         return appConfig.getPayslipsOutputDirectory();
     }

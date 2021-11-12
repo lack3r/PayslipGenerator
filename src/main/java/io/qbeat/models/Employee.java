@@ -1,20 +1,32 @@
 package io.qbeat.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Employee {
+public class Employee implements Serializable {
+
+    private static final long serialVersionUID = 9045863543269746292L;
+
+    @JsonProperty("id")
     private final String id;
+    @JsonProperty("socialInsuranceId")
     private final String socialInsuranceId;
+    @JsonProperty("fullName")
     private final String fullName;
+    @JsonProperty("grossSalary")
     private final BigDecimal grossSalary;
+    @JsonProperty("dateStarted")
     private final LocalDate dateStarted;
 
-    public Employee(String id, String socialInsuranceId, String fullName, BigDecimal grossSalary, LocalDate dateStarted) {
+    @JsonCreator
+    public Employee(@JsonProperty("id") String id, @JsonProperty("socialInsuranceId") String socialInsuranceId, @JsonProperty("fullName") String fullName, @JsonProperty("grossSalary") BigDecimal grossSalary, @JsonProperty("dateStarted") LocalDate dateStarted) {
         this.id = id;
         this.socialInsuranceId = socialInsuranceId;
         this.fullName = fullName;
@@ -26,7 +38,7 @@ public class Employee {
      * @param line A csv line
      * @return An Employee object
      */
-    public static Employee fromCSVLine(String line) {
+    static Employee fromCSVLine(String line) {
         final List<String> parts = CSVReader.splitLine(line);
 
         return new Employee(

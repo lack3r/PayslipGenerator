@@ -1,0 +1,12 @@
+{
+  "name" : "QBeat Technologies",
+  "address" : "Alexandrou Panagouli 52 - 6057 - Larnaca - Cyprus",
+  "phone" : "99123456",
+  "employees" : [ {
+    "id" : "123456",
+    "socialInsuranceId" : "131517",
+    "fullName" : "John Smith",
+    "grossSalary" : 1700,
+    "dateStarted" : [ 2020, 7, 6 ]
+  } ]
+}

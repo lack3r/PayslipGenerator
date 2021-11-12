@@ -20,6 +20,8 @@ class AppConfig {
     @Getter
     private String companyInfoFilename = "";
     @Getter
+    private String companyWithEmployeesFilename = "";
+    @Getter
     private String payslipHistoryFilename = "";
     @Getter
     private String htmlTemplateFilename = "";
@@ -61,6 +63,7 @@ class AppConfig {
         payslipHistoryFilename = getNormalisedFilenameFromProperties(appProps, "PAYSLIP_HISTORY_FILENAME");
         htmlTemplateFilename = getNormalisedFilenameFromProperties(appProps, "HTML_TEMPLATE_FILENAME");
         payslipsOutputDirectory = getNormalisedFilenameFromProperties(appProps, "PAYSLIPS_OUTPUT_DIRECTORY");
+        companyWithEmployeesFilename = getNormalisedFilenameFromProperties(appProps,"COMPANY_WITH_EMPLOYEES_FILENAME");
     }
 
     private String getNormalisedFilenameFromProperties(Properties properties, String property) {
