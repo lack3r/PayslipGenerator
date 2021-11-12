@@ -3,7 +3,6 @@ package io.qbeat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.qbeat.config.Config;
-import io.qbeat.exceptions.ConfigurationReadException;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.writers.CSVWriter;
 import io.qbeat.file.readers.FileReader;
@@ -26,7 +25,7 @@ public class Main {
         try {
             logger.info("Payslip Generator Starting");
 
-            Config config = loadConfigurationFiles();
+            Config config = Config.loadConfigurationFiles();
 
             ObjectMapper mapper = getAndConfigureObjectMapper();
 
@@ -54,16 +53,6 @@ public class Main {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         return mapper;
-    }
-
-    private static Config loadConfigurationFiles() throws ConfigurationReadException {
-        Config config = new Config();
-        try {
-            config.load();
-        } catch (IOException e) {
-            throw new ConfigurationReadException("Failed to load configuration files ", e);
-        }
-        return config;
     }
 
     private static void generatePayslips(Config config, List<Payslip> payslipsToBeGenerated) throws IOException {
