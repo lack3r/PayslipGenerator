@@ -35,18 +35,21 @@ public class Main {
 
             List<Payslip> payslipsToBeGenerated = context.getBean(PayslipCalculator.class).calculate(context.getBean(Company.class));
 
-            try {
-                HtmlGenerator htmlGenerator = new HtmlGenerator(appConfig.getHtmlTemplateFilename(), payslipsToBeGenerated, appConfig.getPayslipsOutputDirectory());
-                htmlGenerator.generate();
-                logger.info("HTML(s) of payslip(s) successfully generated");
-            } catch (IOException e) {
-                throw new IOException("ERROR: Failed to generate the payslip(s) in HTML format ", e);
-            }
+            generatePayslips(context.getBean(HtmlGenerator.class), appConfig, payslipsToBeGenerated);
 
             payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
         } catch (Exception e) {
             logger.error("Failed to calculate and generate invoices \n Terminating", e);
         }
         logger.info("Payslip Generator Finished");
+    }
+
+    private static void generatePayslips(HtmlGenerator htmlGenerator, AppConfig appConfig, List<Payslip> payslipsToBeGenerated) throws IOException {
+        try {
+            htmlGenerator.generate(appConfig.getHtmlTemplateFilename(), payslipsToBeGenerated, appConfig.getPayslipsOutputDirectory());
+            logger.info("HTML(s) of payslip(s) successfully generated");
+        } catch (IOException e) {
+            throw new IOException("ERROR: Failed to generate the payslip(s) in HTML format ", e);
+        }
     }
 }
