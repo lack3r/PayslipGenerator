@@ -24,29 +24,44 @@ public class Main {
 
         logger.info("Payslip Generator Starting");
 
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()){
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
 
-            context.register(Config.class);
-            context.refresh();
+            configureApplicationContext(context);
 
-            AppConfig appConfig = (AppConfig) context.getBean("appConfig");
-            FileUtils fileUtils = context.getBean(FileUtils.class);
-            String companyWithEmployeesFilename = fileUtils.getFullFilePath(appConfig.getCompanyWithEmployeesFilename());
-            Company company = Company.importFromJSON(companyWithEmployeesFilename, context.getBean(ObjectMapper.class));
+            AppConfig appConfig = context.getBean(AppConfig.class);
+            Company company = readCompanyAndItsEmployees(context, appConfig);
 
-            logger.info(company);
-
-            final PayslipHistoryDAO payslipHistoryDAO = (PayslipHistoryDAO ) context.getBean("payslipHistoryDAO");
-
-            List<Payslip> payslipsToBeGenerated = context.getBean(PayslipCalculator.class).calculate(company);
+            List<Payslip> payslipsToBeGenerated = calculatePayslips(context, company);
 
             generatePayslips(context.getBean(HtmlGenerator.class), appConfig, payslipsToBeGenerated);
 
-            payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
+            updatePayslipsHistory(context, payslipsToBeGenerated);
         } catch (Exception e) {
             logger.error("Failed to calculate and generate invoices \n Terminating", e);
         }
         logger.info("Payslip Generator Finished");
+    }
+
+    private static List<Payslip> calculatePayslips(AnnotationConfigApplicationContext context, Company company) {
+        return context.getBean(PayslipCalculator.class).calculate(company);
+    }
+
+    private static void updatePayslipsHistory(AnnotationConfigApplicationContext context, List<Payslip> payslipsToBeGenerated) {
+        final PayslipHistoryDAO payslipHistoryDAO = context.getBean(PayslipHistoryDAO.class);
+        payslipHistoryDAO.insertOnDuplicateUpdate(payslipsToBeGenerated);
+    }
+
+    private static void configureApplicationContext(AnnotationConfigApplicationContext context) {
+        context.register(Config.class);
+        context.refresh();
+    }
+
+    private static Company readCompanyAndItsEmployees(AnnotationConfigApplicationContext context, AppConfig appConfig) throws IOException {
+        FileUtils fileUtils = context.getBean(FileUtils.class);
+        String companyWithEmployeesFilename = fileUtils.getFullFilePath(appConfig.getCompanyWithEmployeesFilename());
+        Company company = Company.importFromJSON(companyWithEmployeesFilename, context.getBean(ObjectMapper.class));
+        logger.info(company);
+        return company;
     }
 
     private static void generatePayslips(HtmlGenerator htmlGenerator, AppConfig appConfig, List<Payslip> payslipsToBeGenerated) throws IOException {
