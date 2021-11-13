@@ -1,11 +1,14 @@
 package io.qbeat.file.writers;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+@Component
 public class CSVWriter implements io.qbeat.file.writers.FileWriter {
 
     /**

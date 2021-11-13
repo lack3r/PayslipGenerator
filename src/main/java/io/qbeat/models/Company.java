@@ -14,9 +14,11 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import static java.util.stream.Collectors.toCollection;
 
+@Component
 public class Company implements Serializable {
 
     private static final Logger logger = LogManager.getLogger(Company.class);

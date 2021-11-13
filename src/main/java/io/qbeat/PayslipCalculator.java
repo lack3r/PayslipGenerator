@@ -21,14 +21,16 @@ public class PayslipCalculator {
 
     private final Company company;
     private final TaxConfig taxConfig;
-    private final PayslipHistoryDAO payslipHistoryDAO;
-    private final GeneralConfig generalConfig;
 
-    public PayslipCalculator(Company company, TaxConfig taxConfig, GeneralConfig generalConfig, PayslipHistoryDAO payslipHistoryDAO) {
+    DeductionsCalculator employeeDeductionsCalculator;
+    DeductionsCalculator employerDeductionsCalculator;
+
+    public PayslipCalculator(Company company, TaxConfig taxConfig, GeneralConfig generalConfig, DeductionsCalculator employeeDeductionsCalculator, DeductionsCalculator employerDeductionsCalculator, PayslipHistoryDAO payslipHistoryDAO) {
         this.company = company;
         this.taxConfig = taxConfig;
-        this.generalConfig = generalConfig;
-        this.payslipHistoryDAO = payslipHistoryDAO;
+
+        this.employeeDeductionsCalculator = employeeDeductionsCalculator;
+        this.employerDeductionsCalculator = employerDeductionsCalculator;
     }
 
     /**
@@ -57,16 +59,9 @@ public class PayslipCalculator {
      * @return A Payslip object for the given employee
      */
     private Payslip calculateEmployeePayslip(Employee employee) {
-        final TaxCalculator taxCalculator = new TaxCalculator(employee.getGrossSalary(), taxConfig.getProperties(),
-                MONTHS_TO_CONSIDER);
 
-        DeductionsCalculator employeeDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYEE, employee,
-                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYEE), payslipHistoryDAO, MONTHS_TO_CONSIDER);
-        DeductionsCalculator employerDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYER, employee,
-                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYER), payslipHistoryDAO, MONTHS_TO_CONSIDER);
-
-        Deductions employeeDeductions = employeeDeductionsCalculator.calculate();
-        Deductions employerDeductions = employerDeductionsCalculator.calculate();
+        Deductions employeeDeductions = employeeDeductionsCalculator.calculate(employee);
+        Deductions employerDeductions = employerDeductionsCalculator.calculate(employee);
 
         return new Payslip(company, employee, employeeDeductions, employerDeductions);
     }

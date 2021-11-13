@@ -1,26 +1,26 @@
 package io.qbeat;
 
 import io.qbeat.models.TaxConfigProperty;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+@Component
 public class TaxCalculator {
     private final int monthsToConsider;
-    private final BigDecimal employeeMonthlySalary;
     private final List<TaxConfigProperty> configProperties;
     private BigDecimal employeeYearlyTaxableSalary;
     private static final int DECIMALS = 2;
 
-    public TaxCalculator(BigDecimal employeeMonthlySalary, List<TaxConfigProperty> configProperties, int monthsToConsider) {
-        this.employeeMonthlySalary = employeeMonthlySalary;
+    public TaxCalculator(List<TaxConfigProperty> configProperties, int monthsToConsider) {
         this.configProperties = configProperties;
         this.monthsToConsider = monthsToConsider;
     }
 
-    public BigDecimal calculate(BigDecimal monthlyNonTaxableAmount) {
-        computeEmployeeYearlyTaxableSalary(monthlyNonTaxableAmount);
+    public BigDecimal calculate(BigDecimal employeeMonthlySalary, BigDecimal monthlyNonTaxableAmount) {
+        computeEmployeeYearlyTaxableSalary(employeeMonthlySalary, monthlyNonTaxableAmount);
 
         BigDecimal tax = BigDecimal.ZERO;
         for (TaxConfigProperty property : configProperties) {
@@ -52,7 +52,7 @@ public class TaxCalculator {
         return property.getRate().compareTo(BigDecimal.ZERO) > 0 && employeeYearlyTaxableSalary.compareTo(BigDecimal.valueOf(property.getRangeStartPrice())) >= 0;
     }
 
-    private void computeEmployeeYearlyTaxableSalary(BigDecimal monthlyNonTaxableAmount) {
+    private void computeEmployeeYearlyTaxableSalary(BigDecimal employeeMonthlySalary, BigDecimal monthlyNonTaxableAmount) {
         final BigDecimal employeeYearlySalary = employeeMonthlySalary.multiply(BigDecimal.valueOf(monthsToConsider));
         final BigDecimal yearlyNonTaxableAmount = monthlyNonTaxableAmount.multiply(BigDecimal.valueOf(monthsToConsider));
         employeeYearlyTaxableSalary = employeeYearlySalary.subtract(yearlyNonTaxableAmount);

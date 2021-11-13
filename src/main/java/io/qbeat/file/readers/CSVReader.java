@@ -1,5 +1,7 @@
 package io.qbeat.file.readers;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,31 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Component
 public class CSVReader implements FileReader {
     private static final String DELIMITER = ",";
-    private static volatile CSVReader instance;
-
-    /**
-     * Prevent external constructor calls
-     */
-    private CSVReader() {
-
-    }
-
-    /**
-     * @return A CSVReader instance
-     */
-    public static CSVReader getInstance() {
-        if (Objects.isNull(instance)) {
-            synchronized (CSVReader.class) {
-                if (Objects.isNull(instance)) {
-                    instance = new CSVReader();
-                }
-            }
-        }
-
-        return instance;
-    }
 
     /**
      * @param line A csv line comma separated
