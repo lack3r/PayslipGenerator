@@ -3,19 +3,13 @@ package io.qbeat.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.qbeat.DeductionsCalculator;
-import io.qbeat.PayslipCalculator;
 import io.qbeat.PayslipHistoryDAO;
 import io.qbeat.TaxCalculator;
-import io.qbeat.exceptions.ConfigurationReadException;
 import io.qbeat.file.readers.CSVReader;
-import io.qbeat.file.readers.FileReader;
 import io.qbeat.file.writers.CSVWriter;
 import io.qbeat.models.Company;
 import io.qbeat.models.Employee;
-import io.qbeat.models.PayslipHistory;
 import io.qbeat.models.PersonType;
-import io.qbeat.utils.FileUtils;
-import lombok.Getter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +19,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
-import java.util.List;
 
 
 @Configuration
@@ -107,11 +100,6 @@ public class Config {
 //        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 //        return mapper;
 //    }
-
-    @Bean("fileUtils")
-    public FileUtils getFileUtils() {
-        return new FileUtils();
-    }
 
     @Bean
     public Employee getEmployee(){
