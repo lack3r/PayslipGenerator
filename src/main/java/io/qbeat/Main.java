@@ -1,22 +1,15 @@
 package io.qbeat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.qbeat.config.AppConfig;
 import io.qbeat.config.Config;
-import io.qbeat.file.readers.CSVReader;
-import io.qbeat.file.writers.CSVWriter;
-import io.qbeat.file.readers.FileReader;
 import io.qbeat.models.Company;
 import io.qbeat.models.Payslip;
 
 import java.io.IOException;
 import java.util.List;
 
-import io.qbeat.utils.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -27,22 +20,20 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try {
-            logger.info("Payslip Generator Starting");
+        logger.info("Payslip Generator Starting");
 
-            AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-            ctx.register(Config.class);
-            ctx.refresh();
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()){
 
-            //ctx.close();
+            context.register(Config.class);
+            context.refresh();
 
-            AppConfig appConfig = (AppConfig) ctx.getBean("appConfig");
+            AppConfig appConfig = (AppConfig) context.getBean("appConfig");
 
-            logger.info(ctx.getBean(Company.class));
+            logger.info(context.getBean(Company.class));
 
-            final PayslipHistoryDAO payslipHistoryDAO = (PayslipHistoryDAO ) ctx.getBean("payslipHistoryDAO");
+            final PayslipHistoryDAO payslipHistoryDAO = (PayslipHistoryDAO ) context.getBean("payslipHistoryDAO");
 
-            List<Payslip> payslipsToBeGenerated = ctx.getBean(PayslipCalculator.class).calculate();
+            List<Payslip> payslipsToBeGenerated = context.getBean(PayslipCalculator.class).calculate(context.getBean(Company.class));
 
             try {
                 HtmlGenerator htmlGenerator = new HtmlGenerator(appConfig.getHtmlTemplateFilename(), payslipsToBeGenerated, appConfig.getPayslipsOutputDirectory());

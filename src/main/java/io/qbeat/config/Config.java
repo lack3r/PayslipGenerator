@@ -138,13 +138,12 @@ public class Config {
         employees.add(getEmployee());
         return new Company("QBeat Technologies LTD", "Alexandrou Panagouli 52, Larnaca, Cyprus", "+357 99999999", employees);
     }
-
-
-    @Bean("payslipCalculator")
-    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO", "employerDeductionsCalculator", "employerDeductionsCalculator", "appConfig"})
-    public PayslipCalculator getPayslipCalculator() throws IOException {
-        return new PayslipCalculator(getCompany(), getTaxConfig(), getGeneralConfig(), getEmployeeDeductionsCalculator(), getEmployerDeductionsCalculator(), getPayslipHistoryDAO());
-    }
+//
+//    @Bean("payslipCalculator")
+//    @DependsOn({"payslipHistoryDAO", "employerDeductionsCalculator", "employerDeductionsCalculator"})
+//    public PayslipCalculator getPayslipCalculator() throws IOException {
+//        return new PayslipCalculator(getCompany(), getEmployeeDeductionsCalculator(), getEmployerDeductionsCalculator());
+//    }
 
     public String getCompanyInfoFilename() {
         return appConfig.getCompanyInfoFilename();
