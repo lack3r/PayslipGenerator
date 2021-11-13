@@ -2,6 +2,8 @@ package io.qbeat.models;
 
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,14 +13,23 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PayslipHistory {
+    @Getter @Setter
     private String employeeId;
+    @Getter @Setter
     private PersonType personType;
+    @Getter @Setter
     private LocalDate date;
+    @Getter @Setter
     private BigDecimal socialInsurance;
+    @Getter @Setter
     private BigDecimal cohesionFund;
+    @Getter @Setter
     private BigDecimal incomeTax;
+    @Getter @Setter
     private BigDecimal redundancyFund;
+    @Getter @Setter
     private BigDecimal industrialTraining;
+    @Getter @Setter
     private BigDecimal nhs;
 
     /**
@@ -66,78 +77,6 @@ public class PayslipHistory {
         return data.stream()
                 .map(String::trim)
                 .collect(Collectors.joining(","));
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public PersonType getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(PersonType personType) {
-        this.personType = personType;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public BigDecimal getSocialInsurance() {
-        return socialInsurance;
-    }
-
-    public void setSocialInsurance(BigDecimal socialInsurance) {
-        this.socialInsurance = socialInsurance;
-    }
-
-    public BigDecimal getCohesionFund() {
-        return cohesionFund;
-    }
-
-    public void setCohesionFund(BigDecimal cohesionFund) {
-        this.cohesionFund = cohesionFund;
-    }
-
-    public BigDecimal getIncomeTax() {
-        return incomeTax;
-    }
-
-    public void setIncomeTax(BigDecimal incomeTax) {
-        this.incomeTax = incomeTax;
-    }
-
-    public BigDecimal getRedundancyFund() {
-        return redundancyFund;
-    }
-
-    public void setRedundancyFund(BigDecimal redundancyFund) {
-        this.redundancyFund = redundancyFund;
-    }
-
-    public BigDecimal getIndustrialTraining() {
-        return industrialTraining;
-    }
-
-    public void setIndustrialTraining(BigDecimal industrialTraining) {
-        this.industrialTraining = industrialTraining;
-    }
-
-    public BigDecimal getNhs() {
-        return nhs;
-    }
-
-    public void setNhs(BigDecimal nhs) {
-        this.nhs = nhs;
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.utils.DateUtil;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
