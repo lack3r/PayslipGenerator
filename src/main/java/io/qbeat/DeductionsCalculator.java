@@ -1,7 +1,6 @@
 package io.qbeat;
 
 import io.qbeat.models.*;
-import io.qbeat.models.Deductions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -170,6 +169,7 @@ public class DeductionsCalculator {
         return grossSalary.multiply(property.getContributionsPercentage()).divide(BigDecimal.valueOf(100.0), DECIMALS, RoundingMode.HALF_UP);
     }
 
+    // TODO: aloizou 07/07/21 MaxContributions are not yet considered in calculations
     private boolean hasReachedMaxContributions(BigDecimal grossSalary, GeneralConfigProperty property) {
         BigDecimal contributions = grossSalary.multiply(BigDecimal.valueOf(monthsToConsider));
         return property.hasMaxContributions() &&  contributions.compareTo(property.getMaxContributions()) > 0;

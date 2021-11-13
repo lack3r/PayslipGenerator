@@ -31,13 +31,14 @@ public class Company implements Serializable {
     private final ArrayList<Employee> employees;
 
     @JsonCreator
-    public Company(@JsonProperty("name") String name, @JsonProperty("address") String address, @JsonProperty("phone") String phone, @JsonProperty("employees") List<Employee> employees) {
+    private Company(@JsonProperty("name") String name, @JsonProperty("address") String address, @JsonProperty("phone") String phone, @JsonProperty("employees") List<Employee> employees) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.employees = new ArrayList<>(employees);
     }
 
+    @Deprecated
     public static Company loadFromCSVFile(FileReader fileReader, String filename) throws IOException {
 
         List<String> fileLines;
