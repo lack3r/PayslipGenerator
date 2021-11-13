@@ -1,9 +1,12 @@
 package io.qbeat.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+@Component
 public class FileUtils {
 
     public String getFullFilePath(String relativeFilePath) throws IOException {

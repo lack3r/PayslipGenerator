@@ -30,7 +30,7 @@ public class PayslipHistoryDAO {
     /**
      * @return All payslip histories
      */
-    public List<PayslipHistory> getAll() {
+    private List<PayslipHistory> getAll() {
 
         List<PayslipHistory> payslipHistory = new ArrayList<>();
         // Since the first time the program runs there is no historic file,
@@ -75,7 +75,7 @@ public class PayslipHistoryDAO {
      * @param id The id of the employee to retrieve payslip histories
      * @return All payslip histories in current month of the given employee
      */
-    public List<PayslipHistory> findByEmployeeIdAndInCurrentMonth(String id) {
+    private List<PayslipHistory> findByEmployeeIdAndInCurrentMonth(String id) {
         return getAll()
                 .stream()
                 .filter(payslipHistory -> payslipHistory.getEmployeeId().equals(id) && DateUtil.isInCurrentMonth(payslipHistory.getDate()))
@@ -85,7 +85,7 @@ public class PayslipHistoryDAO {
     /**
      * @param payslip The payslip to insert in payslip histories
      */
-    public void insert(Payslip payslip) {
+    private void insert(Payslip payslip) {
         List<String> entriesToInsert = preparePayslipEntries(payslip);
 
         try {
@@ -100,7 +100,7 @@ public class PayslipHistoryDAO {
      * @param oldPayslipEntries The payslip histories to update
      * @param newPayslip        The new payslip
      */
-    public void update(List<PayslipHistory> oldPayslipEntries, Payslip newPayslip) {
+    private void update(List<PayslipHistory> oldPayslipEntries, Payslip newPayslip) {
         final List<PayslipHistory> entriesWithoutOldEntries = getAll().stream()
                 .filter(payslipHistory -> !oldPayslipEntries.contains(payslipHistory))
                 .collect(Collectors.toList());
@@ -119,7 +119,7 @@ public class PayslipHistoryDAO {
     /**
      * @param payslip The payslip to insert or update if already exists
      */
-    public void insertOnDuplicateUpdate(Payslip payslip) {
+    private void insertOnDuplicateUpdate(Payslip payslip) {
         List<PayslipHistory> employeeCurrentMonthEntries = findByEmployeeIdAndInCurrentMonth(payslip.getEmployee().getId());
 
         // TODO: aloizou 07/07/21 What about the December and 13th Salary?

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-class AppConfig {
+public class AppConfig {
 
     private static final Logger logger = LogManager.getLogger(AppConfig.class);
 

@@ -7,6 +7,8 @@ import io.qbeat.models.Payslip;
 import io.qbeat.utils.DateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,22 +22,17 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Component
 public class HtmlGenerator {
 
     private static final Logger logger = LogManager.getLogger(HtmlGenerator.class);
 
     private static final String NA = "N/A";
 
-    private final String templateFilename;
-    private final List<Payslip> payslips;
-    private final String outputDirectory;
-
     private final DecimalFormat formatter = new DecimalFormat();
 
-    public HtmlGenerator(String templateFilename, List<Payslip> payslips, String outputDirectory) {
-        this.templateFilename = templateFilename;
-        this.payslips = payslips;
-        this.outputDirectory = outputDirectory;
+    @Autowired
+    public HtmlGenerator() {
         configureAmountsFormatter();
     }
 
@@ -48,19 +45,19 @@ public class HtmlGenerator {
     /**
      * Generates all Invoices
      */
-    public void generate() throws IOException {
+    public void generate(String templateFilename, List<Payslip> payslips, String outputDirectory) throws IOException {
         for (Payslip payslip : payslips) {
-            generatePayslip(payslip);
+            generatePayslip(templateFilename, payslip, outputDirectory);
         }
     }
 
     /**
      * @param payslip A Payslip object
      */
-    private void generatePayslip(Payslip payslip) throws IOException {
-        String template = addInfo(loadTemplateFile(), payslip);
+    private void generatePayslip(String templateFilename, Payslip payslip, String outputDirectory) throws IOException {
+        String template = addInfo(loadTemplateFile(templateFilename), payslip);
         String payslipName = getPayslipFilename(payslip.getEmployee().getId());
-        createNewPayslip(template, payslipName);
+        createNewPayslip(template, payslipName, outputDirectory);
     }
 
     /**
@@ -159,7 +156,7 @@ public class HtmlGenerator {
      * @param filename The name of the file to be created
      * @throws IOException If an I/O error occurs
      */
-    private void createNewPayslip(String content, String filename) throws IOException {
+    private void createNewPayslip(String content, String filename, String outputDirectory) throws IOException {
         String outputDirPath = System.getProperty("user.dir") + File.separator + outputDirectory;
         File outputDir = new File(outputDirPath);
         if (!outputDir.exists()) {
@@ -184,7 +181,7 @@ public class HtmlGenerator {
     /**
      * @return An html template without payslip info
      */
-    private String loadTemplateFile() throws IOException {
+    private String loadTemplateFile(String templateFilename) throws IOException {
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         String filepath = rootPath + File.separator + templateFilename;
 

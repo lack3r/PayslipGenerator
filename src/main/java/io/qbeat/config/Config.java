@@ -1,60 +1,94 @@
 package io.qbeat.config;
 
-import io.qbeat.exceptions.ConfigurationReadException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import io.qbeat.DeductionsCalculator;
+import io.qbeat.PayslipHistoryDAO;
+import io.qbeat.TaxCalculator;
 import io.qbeat.file.readers.CSVReader;
-import io.qbeat.file.readers.FileReader;
-import lombok.Getter;
+import io.qbeat.file.writers.CSVWriter;
+import io.qbeat.models.PersonType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import java.io.IOException;
 
+@Configuration
+@ComponentScan(basePackages = {"io.qbeat"})
 public class Config {
-    @Getter
+
     private AppConfig appConfig;
-    @Getter
-    private GeneralConfig generalConfig;
-    @Getter
-    private TaxConfig taxConfig;
 
-    public static Config loadConfigurationFiles() throws ConfigurationReadException {
-        Config config = new Config();
-        try {
-            config.load();
-        } catch (IOException e) {
-            throw new ConfigurationReadException("Failed to load configuration files ", e);
-        }
-        return config;
-    }
+    // TODO Hard-coded months
+    private static final int MONTHS_TO_CONSIDER = 13;
 
-    private void load() throws IOException {
+    @Bean("appConfig")
+    public AppConfig getAppConfig() throws IOException {
         appConfig = new AppConfig();
         appConfig.load();
+        return appConfig;
+    }
 
-        FileReader fileReader = CSVReader.getInstance();
+    @Bean("csv_reader")
+    @DependsOn({"appConfig"})
+    public CSVReader getFileReader() {
+        return new CSVReader();
+    }
 
-        generalConfig = new GeneralConfig(fileReader, appConfig.getGeneralConfigFilename());
+    @Bean("csv_writer")
+    @DependsOn({"appConfig"})
+    public CSVWriter getFileWriter() {
+        return new CSVWriter();
+    }
+
+    @Bean
+    @DependsOn({"appConfig", "csv_reader"})
+    public GeneralConfig getGeneralConfig() throws IOException {
+        GeneralConfig generalConfig = new GeneralConfig(getFileReader(), appConfig.getGeneralConfigFilename());
         generalConfig.load();
+        return generalConfig;
+    }
 
-        taxConfig = new TaxConfig(fileReader, appConfig.getTaxConfigFilename());
+    @Bean("taxConfig")
+    @DependsOn("appConfig")
+    public TaxConfig getTaxConfig() throws IOException {
+        TaxConfig taxConfig = new TaxConfig(getFileReader(), appConfig.getTaxConfigFilename());
         taxConfig.load();
+        return taxConfig;
     }
 
-    public String getCompanyInfoFilename() {
-        return appConfig.getCompanyInfoFilename();
+    @Bean("taxCalculator")
+    @DependsOn({"appConfig", "taxConfig"})
+    public TaxCalculator getTaxCalculator() throws IOException {
+        return new TaxCalculator(getTaxConfig().getProperties(), MONTHS_TO_CONSIDER);
     }
 
-    public String getPayslipHistoryFilename() {
-        return appConfig.getPayslipHistoryFilename();
+    @Bean("payslipHistoryDAO")
+    @DependsOn({"appConfig", "csv_reader", "csv_writer"})
+    public PayslipHistoryDAO getPayslipHistoryDAO() {
+        return new PayslipHistoryDAO(getFileReader(), getFileWriter(), appConfig.getPayslipHistoryFilename());
     }
 
-    public String getCompanyWithEmployeesFilename() {
-        return appConfig.getCompanyWithEmployeesFilename();
+    @Bean("employeeDeductionsCalculator")
+    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO"})
+    public DeductionsCalculator getEmployeeDeductionsCalculator() throws IOException {
+        return new DeductionsCalculator(PersonType.EMPLOYEE, getGeneralConfig().getProperties(PersonType.EMPLOYEE), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
     }
 
-    public String getPayslipsOutputDirectory() {
-        return appConfig.getPayslipsOutputDirectory();
+    @Bean("employerDeductionsCalculator")
+    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO"})
+    public DeductionsCalculator getEmployerDeductionsCalculator() throws IOException {
+        return new DeductionsCalculator(PersonType.EMPLOYER, getGeneralConfig().getProperties(PersonType.EMPLOYER), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
     }
 
-    public String getHtmlTemplateFilename() {
-        return appConfig.getHtmlTemplateFilename();
+    @Bean("objectMapper")
+    @DependsOn({"appConfig"})
+    public ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        return mapper;
     }
 }

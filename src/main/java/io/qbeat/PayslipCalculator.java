@@ -1,45 +1,41 @@
 package io.qbeat;
 
-import io.qbeat.config.GeneralConfig;
-import io.qbeat.models.PersonType;
-import io.qbeat.config.TaxConfig;
 import io.qbeat.models.Company;
 import io.qbeat.models.Deductions;
 import io.qbeat.models.Employee;
 import io.qbeat.models.Payslip;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PayslipCalculator {
     private static final Logger logger = LogManager.getLogger(PayslipCalculator.class);
 
-    // TODO Hard-coded months
-    private static final int MONTHS_TO_CONSIDER = 13;
+    private final DeductionsCalculator employeeDeductionsCalculator;
+    private final DeductionsCalculator employerDeductionsCalculator;
 
-    private final Company company;
-    private final TaxConfig taxConfig;
-    private final PayslipHistoryDAO payslipHistoryDAO;
-    private final GeneralConfig generalConfig;
-
-    public PayslipCalculator(Company company, TaxConfig taxConfig, GeneralConfig generalConfig, PayslipHistoryDAO payslipHistoryDAO) {
-        this.company = company;
-        this.taxConfig = taxConfig;
-        this.generalConfig = generalConfig;
-        this.payslipHistoryDAO = payslipHistoryDAO;
+    @Autowired
+    public PayslipCalculator(@Qualifier("employeeDeductionsCalculator") DeductionsCalculator employeeDeductionsCalculator,
+                             @Qualifier("employerDeductionsCalculator") DeductionsCalculator employerDeductionsCalculator) {
+        this.employeeDeductionsCalculator = employeeDeductionsCalculator;
+        this.employerDeductionsCalculator = employerDeductionsCalculator;
     }
 
     /**
      * @return A list of Payslip objects
      */
-    public List<Payslip> calculate() {
+    List<Payslip> calculate(Company company) {
         List<Payslip> payslips = new ArrayList<>();
         try {
             logger.debug("Total of {} payslip(s) info to be calculated", company.getEmployees().size());
             for (Employee employee : company.getEmployees()) {
-                Payslip employeePayslip = calculateEmployeePayslip(employee);
+                Payslip employeePayslip = calculateEmployeePayslip(company, employee);
 
                 logger.info("Payslip info of employee with Id {} was successfully calculated", employee.getId());
                 payslips.add(employeePayslip);
@@ -56,17 +52,10 @@ public class PayslipCalculator {
      * @param employee The employee to calculate its payslip data
      * @return A Payslip object for the given employee
      */
-    private Payslip calculateEmployeePayslip(Employee employee) {
-        final TaxCalculator taxCalculator = new TaxCalculator(employee.getGrossSalary(), taxConfig.getProperties(),
-                MONTHS_TO_CONSIDER);
+    private Payslip calculateEmployeePayslip(Company company, Employee employee) {
 
-        DeductionsCalculator employeeDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYEE, employee,
-                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYEE), payslipHistoryDAO, MONTHS_TO_CONSIDER);
-        DeductionsCalculator employerDeductionsCalculator = new DeductionsCalculator(PersonType.EMPLOYER, employee,
-                taxCalculator, generalConfig.getProperties(PersonType.EMPLOYER), payslipHistoryDAO, MONTHS_TO_CONSIDER);
-
-        Deductions employeeDeductions = employeeDeductionsCalculator.calculate();
-        Deductions employerDeductions = employerDeductionsCalculator.calculate();
+        Deductions employeeDeductions = employeeDeductionsCalculator.calculate(employee);
+        Deductions employerDeductions = employerDeductionsCalculator.calculate(employee);
 
         return new Payslip(company, employee, employeeDeductions, employerDeductions);
     }
