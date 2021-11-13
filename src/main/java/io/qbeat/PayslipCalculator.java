@@ -17,8 +17,8 @@ import java.util.List;
 public class PayslipCalculator {
     private static final Logger logger = LogManager.getLogger(PayslipCalculator.class);
 
-    private DeductionsCalculator employeeDeductionsCalculator;
-    private DeductionsCalculator employerDeductionsCalculator;
+    private final DeductionsCalculator employeeDeductionsCalculator;
+    private final DeductionsCalculator employerDeductionsCalculator;
 
     @Autowired
     public PayslipCalculator(@Qualifier("employeeDeductionsCalculator") DeductionsCalculator employeeDeductionsCalculator,

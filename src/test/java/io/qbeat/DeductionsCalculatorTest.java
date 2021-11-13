@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DeductionsCalculatorTest {
 
-    LocalDate startOfYear = LocalDate.of(2021, 01, 01);
-    LocalDate startOfMonth = LocalDate.of(2021, 01, 02);
-    LocalDate midOfMonth = LocalDate.of(2021, 01, 15);;
-    private Employee payedZeroSalaryPerMonth = new Employee("1", "1111", "Homer Simpson", BigDecimal.ZERO, startOfYear);
-    private Employee payedOneEuroSalaryPerMonth = new Employee("2", "1111", "Homer Simpson", BigDecimal.ONE, startOfYear);
+    private final LocalDate startOfYear = LocalDate.of(2021, 01, 01);
+    private final LocalDate startOfMonth = LocalDate.of(2021, 01, 02);
+    private final LocalDate midOfMonth = LocalDate.of(2021, 01, 15);
+    private final Employee payedZeroSalaryPerMonth = new Employee("1", "1111", "Homer Simpson", BigDecimal.ZERO, startOfYear);
+    private final Employee payedOneEuroSalaryPerMonth = new Employee("2", "1111", "Homer Simpson", BigDecimal.ONE, startOfYear);
 
     @BeforeEach
     void setUp() {

@@ -87,27 +87,16 @@ public class Config {
         return new PayslipHistoryDAO(getFileReader(), getFileWriter(), appConfig.getPayslipHistoryFilename());
     }
 
-
-    @Bean("employeeConfig")
-    public PersonType getEmployeeType() {
-        return PersonType.EMPLOYEE;
-    }
-
-    @Bean("employerConfig")
-    public PersonType getEmployerType() {
-        return PersonType.EMPLOYER;
-    }
-
     @Bean("employeeDeductionsCalculator")
-    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO", "employeeConfig"})
+    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO"})
     public DeductionsCalculator getEmployeeDeductionsCalculator() throws IOException {
-        return new DeductionsCalculator(getEmployeeType(), getGeneralConfig().getProperties(getEmployeeType()), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
+        return new DeductionsCalculator(PersonType.EMPLOYEE, getGeneralConfig().getProperties(PersonType.EMPLOYEE), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
     }
 
     @Bean("employerDeductionsCalculator")
-    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO", "employerConfig"})
+    @DependsOn({"appConfig", "taxConfig", "taxCalculator", "payslipHistoryDAO"})
     public DeductionsCalculator getEmployerDeductionsCalculator() throws IOException {
-        return new DeductionsCalculator(getEmployeeType(), getGeneralConfig().getProperties(getEmployerType()), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
+        return new DeductionsCalculator(PersonType.EMPLOYER, getGeneralConfig().getProperties(PersonType.EMPLOYER), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
     }
 
 //    @Bean("company")

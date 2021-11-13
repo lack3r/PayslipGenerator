@@ -4,8 +4,6 @@ import io.qbeat.models.*;
 import io.qbeat.models.Deductions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,7 +17,7 @@ public class DeductionsCalculator {
 
     private final PersonType personType;
     private final Map<String, GeneralConfigProperty> configProperties;
-    private TaxCalculator taxCalculator;
+    private final TaxCalculator taxCalculator;
     private final PayslipHistoryDAO payslipHistoryDAO;
     private final int monthsToConsider;
 
