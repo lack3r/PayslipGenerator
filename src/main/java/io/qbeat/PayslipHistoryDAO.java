@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class PayslipHistoryDAO {
     private final FileReader fileReader;
     private final FileWriter fileWriter;

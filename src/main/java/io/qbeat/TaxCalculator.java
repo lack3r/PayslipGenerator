@@ -1,13 +1,11 @@
 package io.qbeat;
 
 import io.qbeat.models.TaxConfigProperty;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-@Component
 public class TaxCalculator {
     private final int monthsToConsider;
     private final List<TaxConfigProperty> configProperties;
