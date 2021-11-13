@@ -7,8 +7,6 @@ import io.qbeat.PayslipHistoryDAO;
 import io.qbeat.TaxCalculator;
 import io.qbeat.file.readers.CSVReader;
 import io.qbeat.file.writers.CSVWriter;
-import io.qbeat.models.Company;
-import io.qbeat.models.Employee;
 import io.qbeat.models.PersonType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,19 +14,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.LinkedList;
-
 
 @Configuration
 @ComponentScan(basePackages = {"io.qbeat"})
 public class Config {
 
     private AppConfig appConfig;
-
-    //private GeneralConfig generalConfig;
-    //private TaxConfig taxConfig;
 
     // TODO Hard-coded months
     private static final int MONTHS_TO_CONSIDER = 13;
@@ -42,13 +33,13 @@ public class Config {
 
     @Bean("csv_reader")
     @DependsOn({"appConfig"})
-    public CSVReader getFileReader(){
+    public CSVReader getFileReader() {
         return new CSVReader();
     }
 
     @Bean("csv_writer")
     @DependsOn({"appConfig"})
-    public CSVWriter getFileWriter(){
+    public CSVWriter getFileWriter() {
         return new CSVWriter();
     }
 
@@ -76,7 +67,7 @@ public class Config {
 
     @Bean("payslipHistoryDAO")
     @DependsOn({"appConfig", "csv_reader", "csv_writer"})
-    public PayslipHistoryDAO getPayslipHistoryDAO(){
+    public PayslipHistoryDAO getPayslipHistoryDAO() {
         return new PayslipHistoryDAO(getFileReader(), getFileWriter(), appConfig.getPayslipHistoryFilename());
     }
 
@@ -92,53 +83,12 @@ public class Config {
         return new DeductionsCalculator(PersonType.EMPLOYER, getGeneralConfig().getProperties(PersonType.EMPLOYER), getTaxCalculator(), getPayslipHistoryDAO(), MONTHS_TO_CONSIDER);
     }
 
-//    @Bean("company")
-//    @DependsOn({"appConfig"})
-//    public ObjectMapper getObjectMapper() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-//        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-//        return mapper;
-//    }
-
-    @Bean
-    public Employee getEmployee(){
-        return new Employee("111111", "222222", "John Smith", new BigDecimal(1700), LocalDate.of(2019, 4, 1));
-    }
-
-    @Bean("company")
-    @DependsOn({"appConfig", "fileUtils"})
-    public Company getCompany() throws IOException {
-        //String companyWithEmployeesFilename = getFileUtils().getFullFilePath(appConfig.getCompanyWithEmployeesFilename());
-        //return Company.importFromJSON(companyWithEmployeesFilename, getObjectMapper());
-        LinkedList<Employee> employees = new LinkedList<>();
-        employees.add(getEmployee());
-        return new Company("QBeat Technologies LTD", "Alexandrou Panagouli 52, Larnaca, Cyprus", "+357 99999999", employees);
-    }
-//
-//    @Bean("payslipCalculator")
-//    @DependsOn({"payslipHistoryDAO", "employerDeductionsCalculator", "employerDeductionsCalculator"})
-//    public PayslipCalculator getPayslipCalculator() throws IOException {
-//        return new PayslipCalculator(getCompany(), getEmployeeDeductionsCalculator(), getEmployerDeductionsCalculator());
-//    }
-
-    public String getCompanyInfoFilename() {
-        return appConfig.getCompanyInfoFilename();
-    }
-
-    public String getPayslipHistoryFilename() {
-        return appConfig.getPayslipHistoryFilename();
-    }
-
-    public String getCompanyWithEmployeesFilename() {
-        return appConfig.getCompanyWithEmployeesFilename();
-    }
-
-    public String getPayslipsOutputDirectory() {
-        return appConfig.getPayslipsOutputDirectory();
-    }
-
-    public String getHtmlTemplateFilename() {
-        return appConfig.getHtmlTemplateFilename();
+    @Bean("objectMapper")
+    @DependsOn({"appConfig"})
+    public ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        return mapper;
     }
 }
