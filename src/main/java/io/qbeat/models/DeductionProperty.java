@@ -2,13 +2,13 @@ package io.qbeat.models;
 
 import java.math.BigDecimal;
 
-public class GeneralConfigProperty {
+public class DeductionProperty {
     private final PersonType personType;
     private final String name;
     private final BigDecimal contributionsPercentage;
     private final BigDecimal maxContributions;
 
-    public GeneralConfigProperty(String personType, String name, BigDecimal contributionsPercentage, BigDecimal maxContributions) {
+    public DeductionProperty(String personType, String name, BigDecimal contributionsPercentage, BigDecimal maxContributions) {
         this.personType = PersonType.fromValue(personType);
         this.name = name;
         this.contributionsPercentage = contributionsPercentage;
@@ -37,7 +37,7 @@ public class GeneralConfigProperty {
 
     @Override
     public String toString() {
-        return "GeneralConfigProperty{" +
+        return "DeductionProperty{" +
                 "personType=" + personType +
                 ", name='" + name + '\'' +
                 ", contributionsPercentage=" + contributionsPercentage +

@@ -14,7 +14,7 @@ public class AppConfig {
     private static final Logger logger = LogManager.getLogger(AppConfig.class);
 
     @Getter
-    private String generalConfigFilename = "";
+    private String deductionPercentagesFilename = "";
     @Getter
     private String taxConfigFilename = "";
     @Getter
@@ -57,7 +57,7 @@ public class AppConfig {
     }
 
     private void readProperties(Properties appProps) {
-        generalConfigFilename = getNormalisedFilenameFromProperties(appProps, "GENERAL_CONFIG_FILENAME");
+        deductionPercentagesFilename = getNormalisedFilenameFromProperties(appProps, "DEDUCTION_PERCENTAGES_FILENAME");
         taxConfigFilename = getNormalisedFilenameFromProperties(appProps, "TAX_CONFIG_FILENAME");
         companyInfoFilename = getNormalisedFilenameFromProperties(appProps, "COMPANY_INFO_FILENAME");
         payslipHistoryFilename = getNormalisedFilenameFromProperties(appProps, "PAYSLIP_HISTORY_FILENAME");

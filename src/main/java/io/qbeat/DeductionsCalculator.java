@@ -15,7 +15,7 @@ public class DeductionsCalculator {
     private static final int DECIMALS = 2;
 
     private final PersonType personType;
-    private final Map<String, GeneralConfigProperty> configProperties;
+    private final Map<String, DeductionProperty> configProperties;
     private final TaxCalculator taxCalculator;
     private final PayslipHistoryDAO payslipHistoryDAO;
     private final int monthsToConsider;
@@ -24,7 +24,7 @@ public class DeductionsCalculator {
     private List<PayslipHistory> payslipHistories;
 
     public DeductionsCalculator(PersonType personType,
-                                Map<String, GeneralConfigProperty> configProperties, TaxCalculator taxCalculator,
+                                Map<String, DeductionProperty> configProperties, TaxCalculator taxCalculator,
                                 PayslipHistoryDAO payslipHistoryDAO, int monthsToConsider) {
         this.personType = personType;
         this.configProperties = configProperties;
@@ -160,7 +160,7 @@ public class DeductionsCalculator {
         deductions.setIncomeTaxYearToDate(incomeTaxYearToDate);
     }
 
-    private BigDecimal calculateDeductionsForMonth(BigDecimal grossSalary, GeneralConfigProperty property) {
+    private BigDecimal calculateDeductionsForMonth(BigDecimal grossSalary, DeductionProperty property) {
         // TODO: aloizou 07/07/21 MaxContributions are not yet considered in calculations
 //        if (hasReachedMaxContributions(property)) {
 //            return DecimalUtil.round(property.getMaxContributions() * property.getContributionsPercentage() / 100.0/ monthsToConsider);
@@ -170,7 +170,7 @@ public class DeductionsCalculator {
     }
 
     // TODO: aloizou 07/07/21 MaxContributions are not yet considered in calculations
-    private boolean hasReachedMaxContributions(BigDecimal grossSalary, GeneralConfigProperty property) {
+    private boolean hasReachedMaxContributions(BigDecimal grossSalary, DeductionProperty property) {
         BigDecimal contributions = grossSalary.multiply(BigDecimal.valueOf(monthsToConsider));
         return property.hasMaxContributions() &&  contributions.compareTo(property.getMaxContributions()) > 0;
     }
