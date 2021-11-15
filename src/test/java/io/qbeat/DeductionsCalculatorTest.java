@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 class DeductionsCalculatorTest {
 
+    // TODO implement tests
     private final LocalDate startOfYear = LocalDate.of(2021, 1, 1);
     private final LocalDate startOfMonth = LocalDate.of(2021, 1, 2);
     private final LocalDate midOfMonth = LocalDate.of(2021, 1, 15);
@@ -21,10 +22,5 @@ class DeductionsCalculatorTest {
 
     @AfterEach
     void tearDown() {
-    }
-
-    public void should_calculate_employee_percentages_correctly(){
-        //new DeductionsCalculator(PersonType.EMPLOYEE, payedOneEuroSalaryPerMonth);
-
     }
 }
